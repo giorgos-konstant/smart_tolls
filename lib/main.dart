@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -249,7 +250,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 1;
-  DateTime selectedDay = DateTime.now();
+  double balance = 0.00;
+
   @override
   void initState() {
     super.initState();
@@ -299,8 +301,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget dashboard() {
-    double balance = 3.14;
+  StatefulWidget dashboard() {
+    String balanceString = '${balance.toStringAsFixed(2)} EUR';
 
     return Scaffold(
       appBar: AppBar(
@@ -319,19 +321,76 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 20.0),
             Text(
-              '${balance.toStringAsFixed(2)} EUR',
+              balanceString,
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20.0),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.add),
-              label: Text('Add Money'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          double amount = 0.00;
+                          return AlertDialog(
+                            title: Text('Add Money'),
+                            content: StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return TextField(
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (String value) {
+                                    setState(() {
+                                      amount = double.parse(value);
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    balance += amount;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Add'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  icon: Icon(Icons.add, size: 50),
+                  label: Text('Add Money', style: TextStyle(fontSize: 15)),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                 ),
-              ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => userProfile()));
+                  },
+                  icon: Icon(Icons.account_circle_rounded, size: 50),
+                  label: Text('Profile', style: TextStyle(fontSize: 15)),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -530,10 +589,41 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget userProfile() {
-    const String _username = 'admin';
-    const String _email = 'example@mail.com';
-    const String _vehicleInfo = 'XYZ-0000';
+    const String username = 'admin';
+    const String email = 'example@mail.com';
+    const String vehicleInfo = 'XYZ-0000';
 
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("User Profile"),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+        ),
+        padding: EdgeInsets.all(5),
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(height: 30),
+              Text('Username: $username', style: TextStyle(fontSize: 20)),
+              SizedBox(height: 30),
+              Text('Email: $email', style: TextStyle(fontSize: 20)),
+              SizedBox(height: 30),
+              Text('License Plate: $vehicleInfo',
+                  style: TextStyle(fontSize: 20)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
