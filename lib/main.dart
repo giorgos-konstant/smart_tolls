@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -343,7 +343,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   keyboardType: TextInputType.number,
                                   onChanged: (String value) {
                                     setState(() {
-                                      amount = double.parse(value);
+                                      amount = double.tryParse(value) ?? 0.0;
                                     });
                                   },
                                 );
