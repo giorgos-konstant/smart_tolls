@@ -1,10 +1,15 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'models.dart';
+import 'auth.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (context) => AuthProvider(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,225 +24,321 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const LoginSignUpScreen(),
+      home: LoginPage(),
     );
   }
 }
 
-class LoginSignUpScreen extends StatefulWidget {
-  const LoginSignUpScreen({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _LoginSignUpScreenState createState() => _LoginSignUpScreenState();
-}
-
-class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _isAuth = false;
-
-  void _authUser() {
-    setState(() {
-      _isAuth = (_usernameController.text == 'admin' &&
-          _passwordController.text == 'admin');
-      if (_isAuth) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyHomePage(title: 'SmartTolls'),
-          ),
-        );
-      }
-    });
-  }
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text('Login/Sign Up')),
+      appBar: AppBar(
+        title: Text("Log In"),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  Text('Username'),
-                  TextField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter your username',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  Text('Password'),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter your password',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            if (!_isAuth &&
-                (_usernameController.text.isNotEmpty ||
-                    _passwordController.text.isNotEmpty))
-              Text(
-                'Invalid username/password',
-                style: TextStyle(color: Colors.red),
-              ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _authUser,
-              child: Text('Login'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                //auth logic
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegisterPage(),
-                  ),
-                );
-              },
-              child: Text("Sign Up"),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () async {
+            User user = User(
+              isAuth: true,
+              userId: 1,
+              username: 'sample_user',
+              balance: 100.0,
+              email: 'user@mail.com',
+              licensePlate: 'ABC-1234',
+              transactions: [
+                Transaction(
+                    userId: 1,
+                    zone: 'A',
+                    tollName: "Former TEI",
+                    timeStamp: DateTime.now(),
+                    chargeAmount: 0.70),
+                Transaction(
+                    userId: 1,
+                    zone: "B",
+                    tollName: "Germanou",
+                    timeStamp: DateTime.now(),
+                    chargeAmount: 0.35)
+              ],
+            );
+            auth.setUser(user);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: 'EasyToll')));
+          },
+          child: Text("Log In"),
         ),
       ),
     );
   }
 }
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+// class LoginSignUpScreen extends StatefulWidget {
+//   const LoginSignUpScreen({super.key});
 
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _LoginSignUpScreenState createState() => _LoginSignUpScreenState();
+// }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _validatePwdController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _vehicleController = TextEditingController();
+// class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
+//   final TextEditingController _usernameController = TextEditingController();
+//   final TextEditingController _passwordController = TextEditingController();
 
-  String _passwordFailString = '';
-  String _lpFailString = '';
-  String _emailFailString = '';
+//   bool _isAuth = false;
 
-  void _validateSignUp() {
-    bool validPassword =
-        (_passwordController.text == _validatePwdController.text);
-    bool validLP =
-        RegExp(r'^[A-Z]{3}-\d{4}$').hasMatch(_vehicleController.text);
-    bool validEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-        .hasMatch(_emailController.text);
+//   void _authUser() {
+//     setState(() {
+//       _isAuth = (_usernameController.text == 'admin' &&
+//           _passwordController.text == 'admin');
+//       if (_isAuth) {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//             builder: (context) => MyHomePage(title: 'SmartTolls'),
+//           ),
+//         );
+//       }
+//     });
+//   }
 
-    if (validPassword && validLP && validEmail) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: ((context) => MyHomePage(title: 'SmartTolls'))));
-    }
-    if (!validPassword) {
-      setState(() {
-        _passwordFailString = 'Password Validation Failed';
-      });
-    } else {
-      setState(() {
-        _passwordFailString = '';
-      });
-    }
-    if (!validLP) {
-      setState(() {
-        _lpFailString = 'Invalid License Plate.';
-      });
-    } else {
-      setState(() {
-        _lpFailString = '';
-      });
-    }
-    if (!validEmail) {
-      setState(() {
-        _emailFailString = 'Invalid E-mail Format.';
-      });
-    } else {
-      setState(() {
-        _emailFailString = '';
-      });
-    }
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Login/Sign Up')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 16),
+//               child: Column(
+//                 children: [
+//                   Text('Username'),
+//                   TextField(
+//                     controller: _usernameController,
+//                     decoration: InputDecoration(
+//                       border: OutlineInputBorder(),
+//                       hintText: 'Enter your username',
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 16),
+//               child: Column(
+//                 children: [
+//                   Text('Password'),
+//                   TextField(
+//                     controller: _passwordController,
+//                     obscureText: true,
+//                     decoration: InputDecoration(
+//                       border: OutlineInputBorder(),
+//                       hintText: 'Enter your password',
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(height: 16),
+//             if (!_isAuth &&
+//                 (_usernameController.text.isNotEmpty ||
+//                     _passwordController.text.isNotEmpty))
+//               Text(
+//                 'Invalid username/password',
+//                 style: TextStyle(color: Colors.red),
+//               ),
+//             SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: _authUser,
+//               child: Text('Login'),
+//             ),
+//             SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: () {
+//                 //auth logic
+//                 Navigator.pushReplacement(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => const RegisterPage(),
+//                   ),
+//                 );
+//               },
+//               child: Text("Sign Up"),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Sign Up'),
+        title: Text("Sign Up"),
       ),
-      body: Column(
-        children: [
-          Text("Username"),
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(hintText: "Enter username"),
-          ),
-          SizedBox(height: 5.0),
-          Text("Password"),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(hintText: "Enter password"),
-            obscureText: true,
-          ),
-          SizedBox(height: 5.0),
-          Text("Validate Password"),
-          TextField(
-            controller: _validatePwdController,
-            decoration: InputDecoration(hintText: "Re-enter password"),
-          ),
-          Text(_passwordFailString, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 5.0),
-          Text("E-mail Adress"),
-          TextField(
-            controller: _emailController,
-            decoration: InputDecoration(hintText: "Enter e-mail"),
-          ),
-          Text(_emailFailString, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 5.0),
-          Text("Vehicle"),
-          TextField(
-            controller: _vehicleController,
-            decoration: InputDecoration(hintText: "Enter plate number"),
-          ),
-          Text(_lpFailString, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 5.0),
-          ElevatedButton(
-            onPressed: _validateSignUp,
-            child: Text('Sign Up'),
-          )
-        ],
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () async {
+              User user = User(
+                isAuth: true,
+                userId: 2,
+                username: 'new_user',
+                email: 'newuser@mail.com',
+                licensePlate: 'TKH-4768',
+                balance: 40.00,
+                transactions: [
+                  Transaction(
+                      userId: 2,
+                      zone: 'A',
+                      tollName: "Rio",
+                      timeStamp: DateTime.now(),
+                      chargeAmount: 0.70),
+                  Transaction(
+                      userId: 2,
+                      zone: "B",
+                      tollName: "Othonos Amalias",
+                      timeStamp: DateTime.now(),
+                      chargeAmount: 0.35)
+                ],
+              );
+              auth.setUser(user);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage(title: 'EasyToll')));
+            },
+            child: Text('Sign Up')),
       ),
     );
   }
 }
+// class RegisterPage extends StatefulWidget {
+//   const RegisterPage({super.key});
+
+//   @override
+//   State<RegisterPage> createState() => _RegisterPageState();
+// }
+
+// class _RegisterPageState extends State<RegisterPage> {
+//   final _usernameController = TextEditingController();
+//   final _passwordController = TextEditingController();
+//   final _validatePwdController = TextEditingController();
+//   final _emailController = TextEditingController();
+//   final _vehicleController = TextEditingController();
+
+//   String _passwordFailString = '';
+//   String _lpFailString = '';
+//   String _emailFailString = '';
+
+//   void _validateSignUp() {
+//     bool validPassword =
+//         (_passwordController.text == _validatePwdController.text);
+//     bool validLP =
+//         RegExp(r'^[A-Z]{3}-\d{4}$').hasMatch(_vehicleController.text);
+//     bool validEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+//         .hasMatch(_emailController.text);
+
+//     if (validPassword && validLP && validEmail) {
+//       Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//               builder: ((context) => MyHomePage(title: 'SmartTolls'))));
+//     }
+//     if (!validPassword) {
+//       setState(() {
+//         _passwordFailString = 'Password Validation Failed';
+//       });
+//     } else {
+//       setState(() {
+//         _passwordFailString = '';
+//       });
+//     }
+//     if (!validLP) {
+//       setState(() {
+//         _lpFailString = 'Invalid License Plate.';
+//       });
+//     } else {
+//       setState(() {
+//         _lpFailString = '';
+//       });
+//     }
+//     if (!validEmail) {
+//       setState(() {
+//         _emailFailString = 'Invalid E-mail Format.';
+//       });
+//     } else {
+//       setState(() {
+//         _emailFailString = '';
+//       });
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('User Sign Up'),
+//       ),
+//       body: Column(
+//         children: [
+//           Text("Username"),
+//           TextField(
+//             controller: _usernameController,
+//             decoration: InputDecoration(hintText: "Enter username"),
+//           ),
+//           SizedBox(height: 5.0),
+//           Text("Password"),
+//           TextField(
+//             controller: _passwordController,
+//             decoration: InputDecoration(hintText: "Enter password"),
+//             obscureText: true,
+//           ),
+//           SizedBox(height: 5.0),
+//           Text("Validate Password"),
+//           TextField(
+//             controller: _validatePwdController,
+//             decoration: InputDecoration(hintText: "Re-enter password"),
+//           ),
+//           Text(_passwordFailString, style: TextStyle(color: Colors.red)),
+//           SizedBox(height: 5.0),
+//           Text("E-mail Adress"),
+//           TextField(
+//             controller: _emailController,
+//             decoration: InputDecoration(hintText: "Enter e-mail"),
+//           ),
+//           Text(_emailFailString, style: TextStyle(color: Colors.red)),
+//           SizedBox(height: 5.0),
+//           Text("Vehicle"),
+//           TextField(
+//             controller: _vehicleController,
+//             decoration: InputDecoration(hintText: "Enter plate number"),
+//           ),
+//           Text(_lpFailString, style: TextStyle(color: Colors.red)),
+//           SizedBox(height: 5.0),
+//           ElevatedButton(
+//             onPressed: _validateSignUp,
+//             child: Text('Sign Up'),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

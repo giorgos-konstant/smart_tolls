@@ -2,26 +2,37 @@
 
 class User {
   final bool isAuth;
+  final int userId;
   final String username;
   final String email;
   final String licensePlate;
   final double balance;
+  final List<Transaction> transactions;
 
   User({
     required this.isAuth,
+    required this.userId,
     required this.username,
     required this.email,
     required this.licensePlate,
     required this.balance,
+    required this.transactions,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    int userId = json['userId'];
+    List<Transaction> userTransactions = (json['transactions'] as List)
+        .map((transactionJson) => Transaction.fromJson(transactionJson, userId))
+        .toList();
+
     return User(
       isAuth: json['isAuth'],
+      userId: userId,
       username: json['username'],
       email: json['email'],
       licensePlate: json['licensePlate'],
       balance: json['balance'],
+      transactions: userTransactions,
     );
   }
 }
