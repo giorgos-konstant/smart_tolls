@@ -1,5 +1,3 @@
-//import 'dart:convert';
-
 class User {
   final bool isAuth;
   final int userId;
@@ -173,29 +171,6 @@ class Transaction {
       tollName: json['tollName'],
       timeStamp: json['timeStamp'],
       chargeAmount: json['charge'],
-    );
-  }
-}
-
-class TransactionHistory {
-  final int userId;
-  final List<Transaction> transactions;
-
-  TransactionHistory({
-    required this.userId,
-    required this.transactions,
-  });
-
-  factory TransactionHistory.fromJson(Map<String, dynamic> json) {
-    int userId = json['usedId'];
-
-    List<Transaction> userTransactions = (json['transactions'] as List)
-        .map((transactionJson) => Transaction.fromJson(transactionJson, userId))
-        .toList();
-
-    return TransactionHistory(
-      userId: userId,
-      transactions: userTransactions,
     );
   }
 }
