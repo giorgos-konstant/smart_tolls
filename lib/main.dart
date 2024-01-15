@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'models.dart';
 import 'auth.dart';
+import 'post.dart';
 
 void main() {
   runApp(
@@ -36,85 +37,68 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
+    TextEditingController usernameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Log In"),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              User user = User(
-                isAuth: true,
-                userId: 1,
-                username: 'sample_user',
-                balance: 100.0,
-                email: 'user@mail.com',
-                licensePlate: 'ABC-1234',
-                transactions: [
-                  Transaction(
-                      userId: 1,
-                      zone: 'A',
-                      tollName: "Former TEI",
-                      timeStamp: DateTime.now(),
-                      chargeAmount: 0.70),
-                  Transaction(
-                      userId: 1,
-                      zone: "B",
-                      tollName: "Germanou",
-                      timeStamp: DateTime.now(),
-                      chargeAmount: 0.35)
-                ],
-              );
-              auth.setUser(user);
-              ChargePolicy chargePolicy = ChargePolicy(
-                aktiDymaion1: 0.1,
-                aktiDymaion2: 0.2,
-                aktiDymaion3: 0.3,
-                aktiDymaion4: 0.4,
-                perivola1: 1.1,
-                perivola2: 1.2,
-                perivola3: 1.3,
-                perivola4: 1.4,
-                tei1: 2.1,
-                tei2: 2.2,
-                tei3: 2.3,
-                tei4: 2.4,
-                rio1: 3.1,
-                rio2: 3.2,
-                rio3: 3.3,
-                rio4: 3.4,
-                konpoleos1: 4.1,
-                konpoleos2: 4.2,
-                konpoleos3: 4.3,
-                konpoleos4: 4.4,
-                agandreou1: 5.1,
-                agandreou2: 5.2,
-                agandreou3: 5.3,
-                agandreou4: 5.4,
-                germanou1: 6.1,
-                germanou2: 6.2,
-                germanou3: 6.3,
-                germanou4: 6.4,
-                othamal1: 7.1,
-                othamal2: 7.2,
-                othamal3: 7.3,
-                othamal4: 7.4,
-              );
-              auth.setChargePolicy(chargePolicy);
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
-            },
-            child: Text("Log In"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignUpPage()));
-            },
-            child: Text('Sign Up'),
-          ),
-        ],
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(
+                labelText: 'username',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'password',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(auth.loginFailMsg,
+                style: TextStyle(color: Colors.red, fontSize: 20)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                String username = usernameController.text;
+                String password = passwordController.text;
+                User? user = await loginUser(username, password);
+
+                if (user != null) {
+                  auth.setUser(user);
+                  ChargePolicy? chargePolicy = await getPolicy();
+                  auth.setChargePolicy(chargePolicy!);
+                } else {
+                  auth.loginMsg('Login Failed. Invalid username/password.');
+                }
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              },
+              child: Text("Log In", style: TextStyle(fontSize: 20)),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()));
+              },
+              child: Text('Sign Up', style: TextStyle(fontSize: 20)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -127,75 +111,86 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
+    TextEditingController usernameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController valPasswordController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController licensePlateController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Sign Up"),
       ),
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () async {
-              User user = User(
-                isAuth: true,
-                userId: 2,
-                username: 'new_user',
-                email: 'newuser@mail.com',
-                licensePlate: 'TKH-4768',
-                balance: 40.00,
-                transactions: [
-                  Transaction(
-                      userId: 2,
-                      zone: 'A',
-                      tollName: "Rio",
-                      timeStamp: DateTime.now(),
-                      chargeAmount: 0.70),
-                  Transaction(
-                      userId: 2,
-                      zone: "B",
-                      tollName: "Othonos Amalias",
-                      timeStamp: DateTime.now(),
-                      chargeAmount: 0.35)
-                ],
-              );
-              auth.setUser(user);
-              ChargePolicy chargePolicy = ChargePolicy(
-                aktiDymaion1: 0.1,
-                aktiDymaion2: 0.2,
-                aktiDymaion3: 0.3,
-                aktiDymaion4: 0.4,
-                perivola1: 1.1,
-                perivola2: 1.2,
-                perivola3: 1.3,
-                perivola4: 1.4,
-                tei1: 2.1,
-                tei2: 2.2,
-                tei3: 2.3,
-                tei4: 2.4,
-                rio1: 3.1,
-                rio2: 3.2,
-                rio3: 3.3,
-                rio4: 3.4,
-                konpoleos1: 4.1,
-                konpoleos2: 4.2,
-                konpoleos3: 4.3,
-                konpoleos4: 4.4,
-                agandreou1: 5.1,
-                agandreou2: 5.2,
-                agandreou3: 5.3,
-                agandreou4: 5.4,
-                germanou1: 6.1,
-                germanou2: 6.2,
-                germanou3: 6.3,
-                germanou4: 6.4,
-                othamal1: 7.1,
-                othamal2: 7.2,
-                othamal3: 7.3,
-                othamal4: 7.4,
-              );
-              auth.setChargePolicy(chargePolicy);
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
-            },
-            child: Text('Sign Up')),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            Text("Sign up Page", style: TextStyle(fontSize: 30)),
+            SizedBox(height: 50),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(
+                labelText: 'username',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'password',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: valPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Re-enter password',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'e-mail adress',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: licensePlateController,
+              decoration: InputDecoration(
+                labelText: 'Vehicle License Plate',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: () async {
+                  String username = usernameController.text;
+                  String password = passwordController.text;
+                  String valPwd = valPasswordController.text;
+                  String email = emailController.text;
+                  String licensePlate = licensePlateController.text;
+
+                  User? user = await signUpUser(
+                      username, password, valPwd, email, licensePlate);
+                  ChargePolicy? chargePolicy = await getPolicy();
+                  auth.setUser(user!);
+                  auth.setChargePolicy(chargePolicy!);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: Text('Sign Up', style: TextStyle(fontSize: 20))),
+          ],
+        ),
       ),
     );
   }
@@ -212,7 +207,6 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('EasyToll'),
-        automaticallyImplyLeading: true,
       ),
       bottomNavigationBar:
           SizedBox(height: 100, child: _buildNavigationBar(context)),

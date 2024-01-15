@@ -17,22 +17,16 @@ class User {
     required this.transactions,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    int userId = json['userId'];
-    List<Transaction> userTransactions = (json['transactions'] as List)
-        .map((transactionJson) => Transaction.fromJson(transactionJson, userId))
-        .toList();
-
-    return User(
-      isAuth: json['isAuth'],
-      userId: userId,
-      username: json['username'],
-      email: json['email'],
-      licensePlate: json['licensePlate'],
-      balance: json['balance'],
-      transactions: userTransactions,
-    );
-  }
+  User.fromJson(Map<String, dynamic> json)
+      : isAuth = json['isAuth'] as bool,
+        userId = json['userId'] as int,
+        username = json['username'] as String,
+        email = json['email'] as String,
+        licensePlate = json['licensePlate'] as String,
+        balance = json['balance'] as double,
+        transactions = json['transactions']
+            .map<Transaction>((item) => Transaction.fromJson(item))
+            .toList();
 }
 
 class ChargePolicy {
@@ -164,9 +158,9 @@ class Transaction {
     required this.chargeAmount,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json, int userId) {
+  factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      userId: userId,
+      userId: json['userId'],
       zone: json['zone'],
       tollName: json['tollName'],
       timeStamp: json['timeStamp'],

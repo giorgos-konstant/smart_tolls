@@ -11,6 +11,9 @@ class AuthProvider extends ChangeNotifier {
   int _currentIndex = 1;
   int get currentIndex => _currentIndex;
 
+  String _loginFailMsg = '';
+  String get loginFailMsg => _loginFailMsg;
+
   void setUser(User newUser) {
     _user = newUser;
     notifyListeners();
@@ -28,6 +31,11 @@ class AuthProvider extends ChangeNotifier {
 
   void setChargePolicy(ChargePolicy chargePolicy) {
     _chargePolicy = chargePolicy;
+    notifyListeners();
+  }
+
+  void loginMsg(String msg) {
+    _loginFailMsg = loginFailMsg;
     notifyListeners();
   }
 }
