@@ -256,6 +256,38 @@ class HomePage extends StatelessWidget {
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
 
+  Future<double?> _showAddBalanceDialog(BuildContext context) async {
+    TextEditingController amountController = TextEditingController();
+
+    return showDialog<double>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Update Balance"),
+            content: TextField(
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Enter Amount'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  double? amount = double.tryParse(amountController.text);
+                  Navigator.of(context).pop(amount);
+                },
+                child: Text('Add'),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
@@ -287,41 +319,11 @@ class Dashboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          double amount = 0.00;
-                          return AlertDialog(
-                            title: Text('Add Money'),
-                            content: StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return TextField(
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (String value) {
-                                    amount = double.tryParse(value) ?? 0.0;
-                                  },
-                                );
-                              },
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Cancel'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  balance += amount;
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Add'),
-                              ),
-                            ],
-                          );
-                        });
+                  onPressed: () async {
+                    double? amount = await _showAddBalanceDialog(context);
+                    if (amount != null) {
+                      await updateBalance(amount, auth.user!.userId);
+                    }
                   },
                   icon: Icon(Icons.add, size: 50),
                   label: Text('Add Money', style: TextStyle(fontSize: 15)),

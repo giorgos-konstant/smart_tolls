@@ -68,3 +68,23 @@ Future<ChargePolicy?> getPolicy() async {
     return null;
   }
 }
+
+Future<void> updateBalance(double amount, int userId) async {
+  final url = Uri.parse('BACKEND_URL');
+
+  try {
+    final response = await http.post(
+      url,
+      body: {
+        'userId': userId,
+        'amount': amount,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("Balance updated.");
+    }
+  } catch (error) {
+    print("Exception: $error");
+  }
+}
