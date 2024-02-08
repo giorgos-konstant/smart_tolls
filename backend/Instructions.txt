@@ -1,0 +1,33 @@
+INSTALLATION GUIDE :
+
+To make the Server and Database run:
+
+1) Inside the folder of the server.js file (bakcend folder):
+npm init -y
+npm install express body-parser mongoose cors
+
+2) For the Database Server to run locally and host the Mongo DB IoT Database:
+Open a cmd and run:
+mongod
+Check that mongod server logs successfully and expects actions
+You can inspect the contents of the db (iot_db) by running on a NEW cmd :
+mongosh
+!! The iot_db should not be empty in order to appear in mongosh list of databases with:
+show dbs
+
+3) On terminal, while inside the server.js folder(backend folder) run:
+node server.js
+
+The Server and Database should be up and running locally
+You should see in your terminal the following :
+...
+Server is running at http://localhost:5000
+Connected to MongoDB
+Sample data inserted successfully
+Tolls inserted successfully
++ {Sample Charging Policy JSON loaded}
+
+The Database will be automatically loaded with :
+Sample Charging Policy
+Sample Toll Instances (8 - one for each region)
+
