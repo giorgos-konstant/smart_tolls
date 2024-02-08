@@ -160,6 +160,13 @@ insertTolls();
 
 
 // ----------- ROUTING ----------
+// ROUTES:
+// login
+// signup
+// dashboard
+// charge-policy
+// history
+// add-money
 
 // MAIN page load
 app.get('/', (req, res) => {
