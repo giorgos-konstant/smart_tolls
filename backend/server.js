@@ -355,6 +355,7 @@ app.post('/add-money', authenticateUser, async(req, res) => {
   }
 });
 
+// Backend Server listening on localhost 127.0.0.1 port 5000
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
   });
