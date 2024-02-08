@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -116,6 +118,7 @@ class SignUpPage extends StatelessWidget {
     TextEditingController valPasswordController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     TextEditingController licensePlateController = TextEditingController();
+    TextEditingController deviceIdController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -172,6 +175,14 @@ class SignUpPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
+            TextField(
+              controller: deviceIdController,
+              decoration: InputDecoration(
+                labelText: 'NFC Device ID',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () async {
                   String username = usernameController.text;
@@ -179,9 +190,10 @@ class SignUpPage extends StatelessWidget {
                   String valPwd = valPasswordController.text;
                   String email = emailController.text;
                   String licensePlate = licensePlateController.text;
+                  int deviceId = int.parse(deviceIdController.text);
 
-                  User? user = await signUpUser(
-                      username, password, valPwd, email, licensePlate);
+                  User? user = await signUpUser(username, password, valPwd,
+                      email, licensePlate, deviceId);
                   ChargePolicy? chargePolicy = await getPolicy();
                   auth.setUser(user!);
                   auth.setChargePolicy(chargePolicy!);

@@ -5,6 +5,7 @@ class User {
   final String email;
   final String licensePlate;
   final double balance;
+  final int deviceId;
   final List<Transaction> transactions;
 
   User({
@@ -14,6 +15,7 @@ class User {
     required this.email,
     required this.licensePlate,
     required this.balance,
+    required this.deviceId,
     required this.transactions,
   });
 
@@ -24,6 +26,7 @@ class User {
         email = json['email'] as String,
         licensePlate = json['licensePlate'] as String,
         balance = json['balance'] as double,
+        deviceId = json['deviceId'] as int,
         transactions = json['transactions']
             .map<Transaction>((item) => Transaction.fromJson(item))
             .toList();

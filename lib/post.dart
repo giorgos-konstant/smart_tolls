@@ -24,7 +24,7 @@ Future<User?> loginUser(String username, String password) async {
 }
 
 Future<User?> signUpUser(String username, String password, String valPwd,
-    String email, String licensePlate) async {
+    String email, String licensePlate, int deviceId) async {
   final url = Uri.parse('BACKEND_URL');
 
   try {
@@ -35,7 +35,8 @@ Future<User?> signUpUser(String username, String password, String valPwd,
         'password': password,
         'valPassword': valPwd,
         'email': email,
-        'licensePlate': licensePlate
+        'licensePlate': licensePlate,
+        'deviceId': deviceId
       },
     );
 
