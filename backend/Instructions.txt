@@ -1,5 +1,9 @@
 INSTALLATION GUIDE :
 
+!! Need to be installed: !!
+npm
+node
+
 To make the Server and Database run:
 
 1) Inside the folder of the server.js file (bakcend folder):
