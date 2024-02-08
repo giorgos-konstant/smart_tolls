@@ -81,11 +81,11 @@ class LoginPage extends StatelessWidget {
                   auth.setUser(user);
                   ChargePolicy? chargePolicy = await getPolicy();
                   auth.setChargePolicy(chargePolicy!);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 } else {
                   auth.loginMsg('Login Failed. Invalid username/password.');
                 }
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomePage()));
               },
               child: Text("Log In", style: TextStyle(fontSize: 20)),
             ),
