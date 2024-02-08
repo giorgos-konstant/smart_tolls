@@ -124,84 +124,86 @@ class SignUpPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Sign Up"),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            Text("Sign up Page", style: TextStyle(fontSize: 30)),
-            SizedBox(height: 50),
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-                labelText: 'username',
-                border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              Text("Sign up Page", style: TextStyle(fontSize: 30)),
+              SizedBox(height: 50),
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'username',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'password',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'password',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: valPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Re-enter password',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextField(
+                controller: valPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Re-enter password',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'e-mail adress',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'e-mail adress',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: licensePlateController,
-              decoration: InputDecoration(
-                labelText: 'Vehicle License Plate',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextField(
+                controller: licensePlateController,
+                decoration: InputDecoration(
+                  labelText: 'Vehicle License Plate',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: deviceIdController,
-              decoration: InputDecoration(
-                labelText: 'NFC Device ID',
-                border: OutlineInputBorder(),
+              SizedBox(height: 20),
+              TextField(
+                controller: deviceIdController,
+                decoration: InputDecoration(
+                  labelText: 'NFC Device ID',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () async {
-                  String username = usernameController.text;
-                  String password = passwordController.text;
-                  String valPwd = valPasswordController.text;
-                  String email = emailController.text;
-                  String licensePlate = licensePlateController.text;
-                  int deviceId = int.parse(deviceIdController.text);
+              SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    String username = usernameController.text;
+                    String password = passwordController.text;
+                    String valPwd = valPasswordController.text;
+                    String email = emailController.text;
+                    String licensePlate = licensePlateController.text;
+                    int deviceId = int.parse(deviceIdController.text);
 
-                  User? user = await signUpUser(username, password, valPwd,
-                      email, licensePlate, deviceId);
-                  ChargePolicy? chargePolicy = await getPolicy();
-                  auth.setUser(user!);
-                  auth.setChargePolicy(chargePolicy!);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                },
-                child: Text('Sign Up', style: TextStyle(fontSize: 20))),
-          ],
+                    User? user = await signUpUser(username, password, valPwd,
+                        email, licensePlate, deviceId);
+                    ChargePolicy? chargePolicy = await getPolicy();
+                    auth.setUser(user!);
+                    auth.setChargePolicy(chargePolicy!);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
+                  },
+                  child: Text('Sign Up', style: TextStyle(fontSize: 20))),
+            ],
+          ),
         ),
       ),
     );
