@@ -212,10 +212,10 @@ app.get('/signup', async (req, res) => {
 
 // Handle SIGN-UP page values
 app.post('/signup', async (req, res) => {
-  const {username, password, passwordCheck, email, licensePlate, deviceId} = req.body;
+  const {username, password, valPassword, email, licensePlate, deviceId} = req.body;
 
   // Validate Password
-  if (password != passwordCheck) {
+  if (password != valPassword) {
     return res.send('Password and password check do not match');
   }
   try {
