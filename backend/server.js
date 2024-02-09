@@ -190,6 +190,7 @@ app.post('/login', async (req, res) => {
     if (user) {
       const userWithDevice = await UserModel.findById(user._id).populate('device');
       // JSON with logged in user data
+      //res.json(userWithDevice);
       console.log(userWithDevice);
       // send logged in user data to DASHBOARD
       //res.render('dashboard', {user: userWithDevice});
@@ -238,6 +239,7 @@ app.post('/signup', async (req, res) => {
     await savedUser.save();
     const userWithDevice = await UserModel.findById(savedUser._id).populate('device');
     // JSON with signed-up user data
+    //res.json(userWithDevice);
     console.log(userWithDevice);
     // send signed-up user data to DASHBOARD
     //res.render('dashboard', {user: userWithDevice});
@@ -290,6 +292,7 @@ app.get('/charge-policy', async (req, res) => {
       console.log('Charging Policy:', policy);
     });
     // JSON with all charging policies - for structure : => check SAMPLE Charging Policy
+    //res.json(chargingPolicies);
     console.log(chargingPolicies);
     // load charging policy to CHARGE-POLICY
     //res.render('charge-policy', {chargingPolicies});
@@ -350,6 +353,7 @@ app.post('/add-money', authenticateUser, async(req, res) => {
       console.log(user);
       const userWithDevice = await UserModel.findById(userId).populate('device');
       // JSON of user data with updated balance
+      //res.json(userWithDevice);
       console.log('userWithDevice:', userWithDevice);
       // load updated user info on DASHBOARD
       res.render('dashboard', {user: userWithDevice});
