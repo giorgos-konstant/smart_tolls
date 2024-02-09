@@ -182,8 +182,8 @@ app.get('/login', (req, res) => {
 
 // Handle login page received values
 app.post('/login', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const credentials = req.body.credentials;
+  const [username, password] = credentials.split(',');
 
   try {
     const user = await UserModel.findOne({username, password});
@@ -342,7 +342,7 @@ app.get('/history', async (req, res) => {
 // ADD-MONEY for authenticated user
 app.post('/add-money', authenticateUser, async(req, res) => {
   const userId = req.body.userId;
-  const amountToAdd = parseFloat(req.body.amountToAdd);
+  const amountToAdd = parseFloat(req.body.amount);
   try {
     console.log(userId);
     const user = await UserModel.findById(userId);
