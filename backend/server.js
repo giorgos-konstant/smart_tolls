@@ -160,6 +160,13 @@ insertTolls();
 
 
 // ----------- ROUTING ----------
+// ROUTES:
+// login
+// signup
+// dashboard
+// charge-policy
+// history
+// add-money
 
 // MAIN page load
 app.get('/', (req, res) => {
@@ -175,8 +182,8 @@ app.get('/login', (req, res) => {
 
 // Handle login page received values
 app.post('/login', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const credentials = req.body.credentials;
+  const [username, password] = credentials.split(',');
 
   try {
     const user = await UserModel.findOne({username, password});
@@ -184,6 +191,7 @@ app.post('/login', async (req, res) => {
       const userWithDevice = await UserModel.findById(user._id).populate('device');
       // JSON with logged in user data
       console.log(userWithDevice);
+      res.json(userWithDevice);
       // send logged in user data to DASHBOARD
       //res.render('dashboard', {user: userWithDevice});
     } else {
@@ -204,10 +212,10 @@ app.get('/signup', async (req, res) => {
 
 // Handle SIGN-UP page values
 app.post('/signup', async (req, res) => {
-  const {username, password, passwordCheck, email, licensePlate, deviceId} = req.body;
+  const {username, password, valPassword, email, licensePlate, deviceId} = req.body;
 
   // Validate Password
-  if (password != passwordCheck) {
+  if (password != valPassword) {
     return res.send('Password and password check do not match');
   }
   try {
@@ -232,6 +240,7 @@ app.post('/signup', async (req, res) => {
     const userWithDevice = await UserModel.findById(savedUser._id).populate('device');
     // JSON with signed-up user data
     console.log(userWithDevice);
+    res.json(userWithDevice);
     // send signed-up user data to DASHBOARD
     //res.render('dashboard', {user: userWithDevice});
   } catch (error) {
@@ -284,6 +293,7 @@ app.get('/charge-policy', async (req, res) => {
     });
     // JSON with all charging policies - for structure : => check SAMPLE Charging Policy
     console.log(chargingPolicies);
+    res.json(chargingPolicies);
     // load charging policy to CHARGE-POLICY
     //res.render('charge-policy', {chargingPolicies});
   } catch (error) {
@@ -332,7 +342,7 @@ app.get('/history', async (req, res) => {
 // ADD-MONEY for authenticated user
 app.post('/add-money', authenticateUser, async(req, res) => {
   const userId = req.body.userId;
-  const amountToAdd = parseFloat(req.body.amountToAdd);
+  const amountToAdd = parseFloat(req.body.amount);
   try {
     console.log(userId);
     const user = await UserModel.findById(userId);
@@ -344,6 +354,7 @@ app.post('/add-money', authenticateUser, async(req, res) => {
       const userWithDevice = await UserModel.findById(userId).populate('device');
       // JSON of user data with updated balance
       console.log('userWithDevice:', userWithDevice);
+      res.json(userWithDevice);
       // load updated user info on DASHBOARD
       res.render('dashboard', {user: userWithDevice});
     } else {
@@ -355,6 +366,7 @@ app.post('/add-money', authenticateUser, async(req, res) => {
   }
 });
 
+// Backend Server listening on localhost 127.0.0.1 port 5000
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
   });

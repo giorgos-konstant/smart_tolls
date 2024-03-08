@@ -1,15 +1,13 @@
 class User {
-  final bool isAuth;
-  final int userId;
+  final void userId;
   final String username;
   final String email;
   final String licensePlate;
   final double balance;
-  final int deviceId;
+  final String deviceId;
   final List<Transaction> transactions;
 
   User({
-    required this.isAuth,
     required this.userId,
     required this.username,
     required this.email,
@@ -20,13 +18,12 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json)
-      : isAuth = json['isAuth'] as bool,
-        userId = json['userId'] as int,
+      : userId = json['userId'] as Null,
         username = json['username'] as String,
         email = json['email'] as String,
         licensePlate = json['licensePlate'] as String,
         balance = json['balance'] as double,
-        deviceId = json['deviceId'] as int,
+        deviceId = json['device']['deviceId'] as String,
         transactions = json['transactions']
             .map<Transaction>((item) => Transaction.fromJson(item))
             .toList();

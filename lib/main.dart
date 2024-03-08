@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'models.dart';
@@ -144,7 +143,7 @@ class SignUpPage extends StatelessWidget {
               SizedBox(height: 20),
               TextField(
                 controller: passwordController,
-                obscureText: true,
+                obscureText: false,
                 decoration: InputDecoration(
                   labelText: 'password',
                   border: OutlineInputBorder(),
@@ -153,7 +152,7 @@ class SignUpPage extends StatelessWidget {
               SizedBox(height: 20),
               TextField(
                 controller: valPasswordController,
-                obscureText: true,
+                obscureText: false,
                 decoration: InputDecoration(
                   labelText: 'Re-enter password',
                   border: OutlineInputBorder(),
@@ -178,6 +177,7 @@ class SignUpPage extends StatelessWidget {
               SizedBox(height: 20),
               TextField(
                 controller: deviceIdController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'NFC Device ID',
                   border: OutlineInputBorder(),
@@ -191,12 +191,12 @@ class SignUpPage extends StatelessWidget {
                     String valPwd = valPasswordController.text;
                     String email = emailController.text;
                     String licensePlate = licensePlateController.text;
-                    int deviceId = int.parse(deviceIdController.text);
+                    String deviceId = deviceIdController.text;
 
                     User? user = await signUpUser(username, password, valPwd,
                         email, licensePlate, deviceId);
-                    ChargePolicy? chargePolicy = await getPolicy();
                     auth.setUser(user!);
+                    ChargePolicy? chargePolicy = await getPolicy();
                     auth.setChargePolicy(chargePolicy!);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
@@ -336,7 +336,7 @@ class Dashboard extends StatelessWidget {
                   onPressed: () async {
                     double? amount = await _showAddBalanceDialog(context);
                     if (amount != null) {
-                      await updateBalance(amount, auth.user!.userId);
+                      //await updateBalance(amount, auth.user!.userId);
                     }
                   },
                   icon: Icon(Icons.add, size: 50),
