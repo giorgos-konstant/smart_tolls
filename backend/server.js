@@ -192,10 +192,6 @@ app.get('/login', (req, res) => {
   // login page to be loaded
 });
 
-
-// ***************
-
-
 // Handle login page received values
 app.post('/login', async (req, res) => {
   const credentials = req.body.credentials;
