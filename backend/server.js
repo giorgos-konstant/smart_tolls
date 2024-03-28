@@ -123,6 +123,65 @@ const sampleChargingPolicies = [
   },
 ];
 
+
+// Function to add SAMPLE data for transactions into database
+const insertTransactions = async () => {
+   try {
+    // Delete existing transactions
+    await TransactionModel.deleteMany();
+
+    // Sample transactions for user (user)
+    const user1Transactions = [
+      {
+        userId: ObjectId('65c610dd8c15a68dca123ac2'),        // userId
+        zone : 'Zone A',
+        tollName : 'Akti Dymaion',
+        timeStamp : new Date(),
+        chargeAmount : 10,
+      },
+      {
+        userId: ObjectId('65c610dd8c15a68dca123ac2'),
+        zone : 'Zone B',
+        tollName : 'Konpoleos',
+        timeStamp : new Date(),
+        chargeAmount : 20,
+      },
+    ];
+
+    // Sample transactions for user (newuser123)
+    const user2Transactions = [
+      {
+        userId: ObjectId('65eb575d6d7f2c6ea527ca75'),
+        zone : 'Zone A',
+        tollName : 'Perivola',
+        timeStamp: new Date(),
+        chargeAmount : 5,
+      },
+      {
+        userId: ObjectId('65eb575d6d7f2c6ea527ca75'),
+        zone : 'Zone B',
+        tollName : 'Rio',
+        timeStamp : new Date(),
+        chargeAmount : 30,
+      },
+    ];
+
+    // Insert transactions for user
+    await TransactionModel.insertMany(user1Transactions);
+    // Insert transactions for newuser123
+    await TransactionModel.insertMany(user2Transactions);
+    console.log('Transactions inserted successfully');
+   } catch (error) {
+    console.error('Error inserting transactions:', error);
+   }
+};
+
+// Insert transactions into database
+insertTransactions();
+
+
+
+
 // Function to add SAMPLE data into database
 const insertSampleData = async() => {
   try {
