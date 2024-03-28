@@ -34,6 +34,7 @@ db.once('open', () => {
 // Device Schema
 // Charging Policy Schema
 // Toll Schema
+// Transaction Schema
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -46,6 +47,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'Device',
   },
+  transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'}]
 });
 
 // Device Schema
@@ -83,11 +85,21 @@ const tollSchema = new mongoose.Schema({
   },
 });
 
+// Transaction Schema
+const transactionSchema = new mongoose.Schema({
+    userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    zone: String,
+    tollName : String,
+    timeStamp : Date,
+    chargeAmount: Number,
+});
+
 // Crreate Database Models
 const DeviceModel = mongoose.model('Device', deviceSchema);
 const UserModel = mongoose.model('User', userSchema);
 const ChargingPolicyModel = mongoose.model('ChargingPolicy', chargingPolicySchema)
 const TollModel = mongoose.model('Toll', tollSchema);
+const TransactionModel = mongoose.model('Transaction', transactionSchema);
 
 // SAMPLE : Charging Policy Values
 const sampleChargingPolicies = [
@@ -180,6 +192,10 @@ app.get('/login', (req, res) => {
   // login page to be loaded
 });
 
+
+// ***************
+
+
 // Handle login page received values
 app.post('/login', async (req, res) => {
   const credentials = req.body.credentials;
@@ -188,10 +204,18 @@ app.post('/login', async (req, res) => {
   try {
     const user = await UserModel.findOne({username, password});
     if (user) {
-      const userWithDevice = await UserModel.findById(user._id).populate('device');
-      // JSON with logged in user data
-      console.log(userWithDevice);
-      res.json(userWithDevice);
+        // find transactions related to the user
+        // const transactions = await TransactionModel.find({userId});
+        // combine user info and transactions
+        // const userData = {
+        //     user,
+        //     transactions
+        // };
+      const userComplete = await UserModel.findById(user._id).populate('device').populate('transactions');
+      // JSON with logged in user data with device
+      console.log(userComplete);
+      // JSON with logged in user data with transactions
+      res.json(userComplete);
       // send logged in user data to DASHBOARD
       //res.render('dashboard', {user: userWithDevice});
     } else {
