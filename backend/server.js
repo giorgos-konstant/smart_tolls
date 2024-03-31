@@ -123,12 +123,19 @@ const sampleChargingPolicies = [
   },
 ];
 
-
 // Function to add SAMPLE data for transactions into database
 const insertTransactions = async () => {
    try {
     // Delete existing transactions
     await TransactionModel.deleteMany();
+
+    // Fetch exisitng users
+    const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
+    const user2 = await UserModel.findById('65eb575d6d7f2c6ea527ca75');
+
+    if (user1 || user2) {
+      throw new Error('User not found');
+    }
 
     // Sample transactions for user (user)
     const user1Transactions = [
@@ -167,10 +174,18 @@ const insertTransactions = async () => {
     ];
 
     // Insert transactions for user
-    await TransactionModel.insertMany(user1Transactions);
+    const insertedUser1 = await TransactionModel.insertMany(user1Transactions);
     // Insert transactions for newuser123
-    await TransactionModel.insertMany(user2Transactions);
-    console.log('Transactions inserted successfully');
+    const insertedUser2 = await TransactionModel.insertMany(user2Transactions);
+
+    // Update users with the new transactions
+    user1.transactions.push(...insertedUser1.map(transaction => transaction._id))
+    user2.transactions.push(...insertedUser2.map(transaction => transaction._id))
+    // Save updated users
+    await user1.save();
+    await user2.save();
+
+    console.log('Transactions inserted and users updated successfully');
    } catch (error) {
     console.error('Error inserting transactions:', error);
    }
@@ -178,7 +193,6 @@ const insertTransactions = async () => {
 
 // Insert transactions into database
 insertTransactions();
-
 
 
 
@@ -250,6 +264,10 @@ app.get('/login', (req, res) => {
   //res.sendFile(__dirname + '/public/login.html');
   // login page to be loaded
 });
+
+
+// ***************
+
 
 // Handle login page received values
 app.post('/login', async (req, res) => {
