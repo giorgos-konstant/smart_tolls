@@ -449,11 +449,12 @@ app.post('/add-money', authenticateUser, async(req, res) => {
       await user.save();
       console.log(user);
       const userWithDevice = await UserModel.findById(userId).populate('device');
+      const updatedBalance = userWithDevice.balance;
       // JSON of user data with updated balance
       console.log('userWithDevice:', userWithDevice);
-      res.json(userWithDevice);
+      res.json({balance: updatedBalance});
       // load updated user info on DASHBOARD
-      res.render('dashboard', {user: userWithDevice});
+      // res.render('dashboard', {user: userWithDevice});
     } else {
       res.status(404).send('User not found');
     }
