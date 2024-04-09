@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
 const app = express();
 const port = 5000;
 
@@ -38,6 +39,7 @@ db.once('open', () => {
 
 // User Schema
 const userSchema = new mongoose.Schema({
+  registerId: Number,
   username: String, 
   password: String,
   email: String, 
@@ -49,6 +51,7 @@ const userSchema = new mongoose.Schema({
   },
   transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'}]
 });
+userSchema.plugin(autoIncrement.plugin, {model: 'User', field: 'registerId'});
 
 // Device Schema
 const deviceSchema = new mongoose.Schema({
@@ -309,6 +312,7 @@ app.get('/signup', async (req, res) => {
 
 // Handle SIGN-UP page values
 app.post('/signup', async (req, res) => {
+  registerId = 0;
   const {username, password, valPassword, email, licensePlate, deviceId} = req.body;
 
   // Validate Password
@@ -317,6 +321,7 @@ app.post('/signup', async (req, res) => {
   }
   try {
     const newUser = new UserModel({
+      registerId: registerId,
       username: username,
       password: password,
       email: email,
@@ -324,7 +329,7 @@ app.post('/signup', async (req, res) => {
       balance: 10,
       device: null,
     });
-
+    registerId = registerId + 1;
     const savedUser = await newUser.save();
 
     const newDevice = new DeviceModel({
