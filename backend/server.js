@@ -134,21 +134,35 @@ const insertTransactions = async () => {
     const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
     const user2 = await UserModel.findById('65eb575d6d7f2c6ea527ca75');
 
+<<<<<<< HEAD
+    // if (user1 || user2) {
+    //   throw new Error('User not found');
+    // }
+=======
     if (user1 || user2) {
       throw new Error('User not found');
     }
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
 
     // Sample transactions for user (user)
     const user1Transactions = [
       {
+<<<<<<< HEAD
+        userId: '65c610dd8c15a68dca123ac2',        // userId
+=======
         userId: ObjectId('65c610dd8c15a68dca123ac2'),        // userId
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
         zone : 'Zone A',
         tollName : 'Akti Dymaion',
         timeStamp : new Date(),
         chargeAmount : 10,
       },
       {
+<<<<<<< HEAD
+        userId: '65c610dd8c15a68dca123ac2',
+=======
         userId: ObjectId('65c610dd8c15a68dca123ac2'),
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
         zone : 'Zone B',
         tollName : 'Konpoleos',
         timeStamp : new Date(),
@@ -159,14 +173,22 @@ const insertTransactions = async () => {
     // Sample transactions for user (newuser123)
     const user2Transactions = [
       {
+<<<<<<< HEAD
+        userId: '65eb575d6d7f2c6ea527ca75',
+=======
         userId: ObjectId('65eb575d6d7f2c6ea527ca75'),
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
         zone : 'Zone A',
         tollName : 'Perivola',
         timeStamp: new Date(),
         chargeAmount : 5,
       },
       {
+<<<<<<< HEAD
+        userId: '65eb575d6d7f2c6ea527ca75',
+=======
         userId: ObjectId('65eb575d6d7f2c6ea527ca75'),
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
         zone : 'Zone B',
         tollName : 'Rio',
         timeStamp : new Date(),
@@ -439,15 +461,29 @@ app.get('/history', async (req, res) => {
 
 
 // ADD-MONEY for authenticated user
-app.post('/add-money', authenticateUser, async(req, res) => {
+app.post('/add-money', async(req, res) => {
   const userId = req.body.userId;
   const amountToAdd = parseFloat(req.body.amount);
   try {
-    console.log(userId);
-    const user = await UserModel.findById(userId);
-    console.log(user);
+    //console.log(userId);
+    const user = await UserModel.findById(userId).populate('device');
+    //console.log(user);
     if (user) {
       user.balance += amountToAdd;
+<<<<<<< HEAD
+      //console.log("User balance:",user.balance);
+      //console.log(user);
+      const updatedBalance = user.balance;
+      //console.log("Updated balance:",updatedBalance);
+      // JSON of user data with updated balance
+      //console.log('userWithDevice:', user);
+      res.json({balance: updatedBalance});
+      console.log("before save");
+      console.log(user);
+      await user.save();
+      console.log("after save");
+      console.log(user);
+=======
       await user.save();
       console.log(user);
       const userWithDevice = await UserModel.findById(userId).populate('device');
@@ -455,6 +491,7 @@ app.post('/add-money', authenticateUser, async(req, res) => {
       // JSON of user data with updated balance
       console.log('userWithDevice:', userWithDevice);
       res.json({balance: updatedBalance});
+>>>>>>> 9f604803d495674d599e1f6e851a8e2bfcfcdd10
       // load updated user info on DASHBOARD
       // res.render('dashboard', {user: userWithDevice});
     } else {
