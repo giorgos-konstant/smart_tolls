@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_import
+// ignore_for_file: prefer_const_constructors, unused_import, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
 import 'dart:developer';
@@ -77,10 +77,10 @@ class LoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
                 User? user = await loginUser(username, password);
+                ChargePolicy? chargePolicy = await getPolicy();
 
                 if (user != null) {
                   auth.setUser(user);
-                  ChargePolicy? chargePolicy = await getPolicy();
                   auth.setChargePolicy(chargePolicy!);
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
@@ -272,6 +272,7 @@ class Dashboard extends StatelessWidget {
 
   Future<double?> _showAddBalanceDialog(BuildContext context) async {
     TextEditingController amountController = TextEditingController();
+    AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
 
     return showDialog<double>(
         context: context,
@@ -291,9 +292,20 @@ class Dashboard extends StatelessWidget {
                 child: Text('Cancel'),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   double? amount = double.tryParse(amountController.text);
-                  Navigator.of(context).pop(amount);
+                  double? updatedBalance =
+                      await updateBalance(amount as double, auth.user!.userId);
+                  User updatedUser = User(
+                      balance: updatedBalance as double,
+                      userId: auth.user!.userId,
+                      username: auth.user!.username,
+                      email: auth.user!.email,
+                      licensePlate: auth.user!.licensePlate,
+                      deviceId: auth.user!.deviceId,
+                      transactions: auth.user!.transactions);
+                  auth.setUser(updatedUser);
+                  Navigator.of(context).pop();
                 },
                 child: Text('Add'),
               ),
@@ -336,7 +348,7 @@ class Dashboard extends StatelessWidget {
                   onPressed: () async {
                     double? amount = await _showAddBalanceDialog(context);
                     if (amount != null) {
-                      //await updateBalance(amount, auth.user!.userId);
+                      await updateBalance(amount, auth.user!.userId);
                     }
                   },
                   icon: Icon(Icons.add, size: 50),
@@ -417,40 +429,84 @@ class Policy extends StatelessWidget {
                     children: [
                       TableCell(child: Center(child: Text('Akti Dymaion'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.aktiDymaion1}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp!.zonePolicies[0].regions[0].prices.timeZone1}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.aktiDymaion2}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[0].prices.timeZone2}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.aktiDymaion3}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[0].prices.timeZone3}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.aktiDymaion4}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[0].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Perivola'))),
-                      TableCell(child: Center(child: Text('${cp?.perivola1}'))),
-                      TableCell(child: Center(child: Text('${cp?.perivola2}'))),
-                      TableCell(child: Center(child: Text('${cp?.perivola3}'))),
-                      TableCell(child: Center(child: Text('${cp?.perivola4}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[1].prices.timeZone1}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[1].prices.timeZone2}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[1].prices.timeZone3}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[1].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Former TEI'))),
-                      TableCell(child: Center(child: Text('${cp?.tei1}'))),
-                      TableCell(child: Center(child: Text('${cp?.tei2}'))),
-                      TableCell(child: Center(child: Text('${cp?.tei3}'))),
-                      TableCell(child: Center(child: Text('${cp?.tei4}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[2].prices.timeZone1}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[2].prices.timeZone2}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[2].prices.timeZone3}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[2].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Rio'))),
-                      TableCell(child: Center(child: Text('${cp?.rio1}'))),
-                      TableCell(child: Center(child: Text('${cp?.rio2}'))),
-                      TableCell(child: Center(child: Text('${cp?.rio3}'))),
-                      TableCell(child: Center(child: Text('${cp?.rio4}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[3].prices.timeZone1}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[3].prices.timeZone2}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[3].prices.timeZone3}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[0].regions[3].prices.timeZone4}'))),
                     ],
                   ),
                 ],
@@ -482,44 +538,84 @@ class Policy extends StatelessWidget {
                     children: [
                       TableCell(child: Center(child: Text('Kon/poleos'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.konpoleos1}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[0].prices.timeZone1}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.konpoleos2}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[0].prices.timeZone2}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.konpoleos3}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[0].prices.timeZone3}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.konpoleos4}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[0].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Ag. Andreou'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.agandreou1}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[1].prices.timeZone1}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.agandreou2}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[1].prices.timeZone2}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.agandreou3}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[1].prices.timeZone3}'))),
                       TableCell(
-                          child: Center(child: Text('${cp?.agandreou4}'))),
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[1].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Germanou'))),
-                      TableCell(child: Center(child: Text('${cp?.germanou1}'))),
-                      TableCell(child: Center(child: Text('${cp?.germanou2}'))),
-                      TableCell(child: Center(child: Text('${cp?.germanou3}'))),
-                      TableCell(child: Center(child: Text('${cp?.germanou4}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[2].prices.timeZone1}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[2].prices.timeZone2}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[2].prices.timeZone3}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[2].prices.timeZone4}'))),
                     ],
                   ),
                   TableRow(
                     children: [
                       TableCell(child: Center(child: Text('Othonos-Amalias'))),
-                      TableCell(child: Center(child: Text('${cp?.othamal1}'))),
-                      TableCell(child: Center(child: Text('${cp?.othamal2}'))),
-                      TableCell(child: Center(child: Text('${cp?.othamal3}'))),
-                      TableCell(child: Center(child: Text('${cp?.othamal4}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[3].prices.timeZone1}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[3].prices.timeZone2}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[3].prices.timeZone3}'))),
+                      TableCell(
+                          child: Center(
+                              child: Text(
+                                  '${cp.zonePolicies[1].regions[3].prices.timeZone4}'))),
                     ],
                   ),
                 ],
@@ -586,7 +682,7 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-
+    String userId = auth.user!.userId;
     String username = auth.user!.username;
     String email = auth.user!.email;
     String lp = auth.user!.licensePlate;
@@ -612,6 +708,8 @@ class UserProfile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 30),
+              Text('User ID: $userId', style: TextStyle(fontSize: 20)),
               SizedBox(height: 30),
               Text('Username: $username', style: TextStyle(fontSize: 20)),
               SizedBox(height: 30),

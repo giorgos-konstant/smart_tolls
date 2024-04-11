@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'models.dart';
-import 'dart:developer';
 
 Future<User?> loginUser(String username, String password) async {
   final url = Uri.parse('http://localhost:5000/login/');
@@ -14,16 +13,11 @@ Future<User?> loginUser(String username, String password) async {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      print('Returned data:');
-      print(data);
       return User.fromJson(data);
     } else {
-      print('entered else');
-      print(response.statusCode);
       return null;
     }
   } catch (error) {
-    print("Exception: $error");
     return null;
   }
 }
@@ -50,14 +44,11 @@ Future<User?> signUpUser(String username, String password, String valPwd,
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      print(data);
       return User.fromJson(data);
     } else {
-      log(response.body);
       return null;
     }
   } catch (error) {
-    log("Exception: $error");
     return null;
   }
 }
@@ -66,36 +57,43 @@ Future<ChargePolicy?> getPolicy() async {
   final url = Uri.parse('http://localhost:5000/charge-policy/');
 
   try {
-    final response = await http.post(url);
-
+    final response = await http.get(url);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(response.body);
       return ChargePolicy.fromJson(data);
     } else {
       return null;
     }
   } catch (error) {
-    print("Exception: $error");
     return null;
   }
 }
 
-Future<void> updateBalance(double amount, int userId) async {
+Future<double?> updateBalance(double amount, String userId) async {
   final url = Uri.parse('http://localhost:5000/add-money/');
 
   try {
+    var reqBody = {
+      'userId': userId,
+      'amount': amount,
+    };
     final response = await http.post(
       url,
-      body: {
-        'userId': userId,
-        'amount': amount,
-      },
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(reqBody),
     );
-
+    print("Response:");
+    print(response.body);
     if (response.statusCode == 200) {
-      print("Balance updated.");
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      double updatedBalance = json['balance'] as double;
+      return updatedBalance;
+    } else {
+      return null;
     }
   } catch (error) {
-    print("Exception: $error");
+    print("Error:");
+    print(error);
+    return null;
   }
 }
