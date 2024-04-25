@@ -1,6 +1,9 @@
+// Connect backend to broker
+// Send data from broker to backend
+
 const mqtt = require('mqtt');
 
-// Define MQTT broker settings
+// MQTT broker settings
 const brokerAddress = "150.140.186.118"
 const topic = 'iot/toll/toll2';
 
@@ -28,6 +31,7 @@ client.on('message', function (topic, message) {
 })
 
 // SEND DATA TO BACKEND
+
 const http = require('http');
 const postData = JSON.stringify({ device_id, toll_id, timestamp});
 const options = {
@@ -55,4 +59,7 @@ req.on('error', (error) => {
 // Write JSON data to request body
 req.write(postData);
 req.end();
+
+
+
 
