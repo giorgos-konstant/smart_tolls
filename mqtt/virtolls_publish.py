@@ -1,14 +1,12 @@
 from paho.mqtt import client as mqtt_client
 import time
 import random
-from py_acr122u import nfc
-from py_acr122u import error
-from nfc_read import nfc_read
-
 
 broker = "localhost"
 port = 1883
-topic = "tolls/Rio"
+tolls = ['TEI','Konstantinoupoleos','Germanou','OthonosAmalias']
+topics = [f'tolls/{toll}' for toll in tolls]
+print(topics)
 mqtt_client.connected_flag = False
 client_id = f'publish-{random.randint(0, 1000)}'
 
@@ -29,26 +27,21 @@ def connect_mqtt():
 def publish(client):
     msg_count = 1
     try:
-        time.sleep(1)
         while True:
-            if not nfc_read():
-                print("nothing happening right now")
-                time.sleep(1)
+            time.sleep(random.randint(1,5))
+            msg = f"messages: {msg_count}"
+            ind = random.randint(0,len(topics)-1)
+            result = client.publish(topics[ind],msg)
+            status = result[0]
+            if status == 0:
+                print(f"Send {msg} to topic {topics[ind]}")
             else:
-                msg = f"msg {msg_count}"
-                result = f'messages: {msg_count}'
-                result = client.publish(topic,msg)
-                status = result[0]
-                if status == 0:
-                    print(f"Send {msg} to topic {topic} from NFC reader")
-                else:
-                    print(f"Failed to send message to topic {topic}")
-                msg_count += 1
-                time.sleep(1)
+                print(f"Failed to send message to topic {topics[ind]}")
+            msg_count += 1
     finally:
         client.disconnect()
         client.loop_stop()
-    
+
 def run():
     print("Inside run-publish loop")
     client = connect_mqtt()
@@ -56,5 +49,7 @@ def run():
     publish(client)
     
 
+
 if __name__ == "__main__":
     run()
+

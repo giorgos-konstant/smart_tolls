@@ -7,7 +7,9 @@ import random
 broker = "localhost"
 port = 1883
 client_id = f'subscribe--{random.randint(0,1000)}'
-topic = "python/mqtt"
+tolls = ['TEI','Konstantinoupoleos','Germanou','OthonosAmalias','Rio']
+topics = [f'tolls/{toll}' for toll in tolls]
+print(topics)
 
 # connect to MQTT
 def connect_mqtt() -> mqtt_client:
@@ -29,7 +31,8 @@ def subscribe(client : mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received {msg.payload.decode()} ` from `{msg.topic}` topic")
 
-    client.subscribe(topic)
+    for topic in topics:
+        client.subscribe(topic)
     client.on_message = on_message
 
 # def run():
