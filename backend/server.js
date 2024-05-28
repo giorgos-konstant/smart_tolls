@@ -478,6 +478,63 @@ app.post('/add-money', async(req, res) => {
   }
 });
 
+// TOLL-PAYMENT
+app.post('/toll-payment', async (req, res)=> {
+    const {device_id, toll_id, timestamp} = req.body;
+    try {
+        const device = await DeviceModel.findOne({deviceId: device_id}).exec();
+        if (!device) {
+            return res.status(404).send({ message: 'Device not found' });
+        }
+
+        const user = await UserModel.findById(device.user).exec();
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        const toll = await TollModel.findById(toll_id).exec();
+        if(!toll) {
+            return res.status(404).send({ message: 'Toll not found' });
+        }
+
+        const {zone, region, policy} = toll;
+        const {hours} = extractTimezone(timestamp);
+        const regionPolicy = policy.regions.find((r)=> r.name === region);
+        const chargeAmount = calculateChargeAmount(regionPolicy, hours);
+
+        const newTransaction = new TransactionModel({
+            userId: user._id,
+            zone,
+            tollName: toll.name,
+            timeStamp: timestamp,
+            chargeAmount,
+        });
+
+        const savedTransaction = await newTransaction.save();
+        user.transactions.push(savedTransaction._id);
+        user.balance -= chargeAmount;
+        await user.save();
+        res.send({message:'Transaction processed', transaction: savedTransaction, balance: user.balance});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Server error' });
+      }
+});
+
+// Caclulate charge amount based on time and zone
+function extractTimezone(timestamp) {
+    const date = new Date(timestamp);
+    return {hours: date.getHours()};
+}
+
+function calculateChargeAmount(regionPolicy, hours) {
+    if (hours >= 8 && hours < 12) return regionPolicy.prices['08-12'];
+    if (hours >= 12 && hours < 17) return regionPolicy.prices['08-12'];
+    if (hours >= 17 && hours < 20) return regionPolicy.prices['08-12'];
+    if (hours >= 20 && hours < 22) return regionPolicy.prices['08-12'];
+    return 0;
+}
+
 // Backend Server listening on localhost 127.0.0.1 port 5000
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
