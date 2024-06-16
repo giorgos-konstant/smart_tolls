@@ -1,16 +1,23 @@
 // ignore_for_file: prefer_const_constructors, unused_import, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:mqtt_client/mqtt_browser_client.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 import 'package:provider/provider.dart';
 import 'models.dart';
 import 'auth.dart';
 import 'post.dart';
+import 'mqtt.dart';
 
 void main() {
   runApp(
+    MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider(), child: MyApp()),
+    ChangeNotifierProvider(create: (context) => MqttDataProvider(), child: MyApp())
+    ])
   );
 }
 
@@ -216,7 +223,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-
+    
+    final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp();
+    
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

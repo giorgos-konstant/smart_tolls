@@ -1,0 +1,10 @@
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/icudtl.dat
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/flutter_windows.dll
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.bin
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.json
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/FontManifest.json
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/kernel_blob.bin
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/NOTICES.Z
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/Debug/data/flutter_assets/shaders/ink_sparkle.frag

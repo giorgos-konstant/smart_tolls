@@ -3,7 +3,6 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
 const app = express();
 const port = 5000;
 
