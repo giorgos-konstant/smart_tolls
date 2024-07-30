@@ -15,8 +15,7 @@ import 'mqtt.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => AuthProvider(), child: MyApp()),
-    ChangeNotifierProvider(create: (context) => MqttDataProvider(), child: MyApp())
+    ChangeNotifierProvider(create: (context) => AuthProvider(), child: MyApp())
     ])
   );
 }
@@ -224,8 +223,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
     
-    final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp();
-    
+    final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp(auth);
     
     return Scaffold(
       appBar: AppBar(
@@ -253,6 +251,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNavigationBar(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
+    
 
     return BottomNavigationBar(
       currentIndex: auth.currentIndex,
@@ -644,6 +643,7 @@ class History extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
+    
 
     List<Transaction> tr = auth.user!.transactions;
 
@@ -692,6 +692,8 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
+    
+
     String userId = auth.user!.userId;
     String username = auth.user!.username;
     String email = auth.user!.email;
