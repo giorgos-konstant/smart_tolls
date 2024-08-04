@@ -1,6 +1,8 @@
 from paho.mqtt import client as mqtt_client
 import time
 import random
+import json
+from datetime import datetime
 
 
 broker = "localhost"
@@ -28,8 +30,18 @@ def publish(client):
     try:
         
         time.sleep(1)
-        msg = f"Rio,0.8"
-        result = client.publish(topic,msg)
+        msg = {
+            "updatedBalance" : 9.2,
+            "newTransaction" : {
+                "userId" : f"id{random.randint(1,10)}",
+                "zone" : "A",
+                "tollName" : "Rio",
+                "timeStamp" : str(datetime.now().isoformat()),
+                "chargeAmount" : 0.8
+            }
+        }
+        json_msg = json.dumps(msg)
+        result = client.publish(topic,json_msg)
         status = result[0]
         if status == 0:
             print(f"Send {msg} to topic {topic}")
