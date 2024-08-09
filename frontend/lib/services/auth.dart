@@ -35,7 +35,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void loginMsg(String msg) {
-    _loginFailMsg = loginFailMsg;
+    _loginFailMsg = msg;
     notifyListeners();
   }
 }

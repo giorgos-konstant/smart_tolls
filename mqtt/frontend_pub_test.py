@@ -25,23 +25,26 @@ def connect_mqtt():
     client.connect(broker,port)
     return client
 
-def publish(client):
+def publish(client,fail:bool):
     
     try:
         
         time.sleep(1)
-        msg = {
-            "updatedBalance" : 9.2,
-            "newTransaction" : {
-                "userId" : f"id{random.randint(1,10)}",
-                "zone" : "A",
-                "tollName" : "Rio",
-                "timeStamp" : str(datetime.now().isoformat()),
-                "chargeAmount" : 0.8
+        if fail:
+            msg = 'failed'
+        else:
+            json_msg = {
+                "updatedBalance" : 89.4,
+                "newTransaction" : {
+                    "userId" : f"id{random.randint(1,10)}",
+                    "zone" : "A",
+                    "tollName" : "Rio",
+                    "timeStamp" : str(datetime.now().isoformat()),
+                    "chargeAmount" : 0.8
+                }
             }
-        }
-        json_msg = json.dumps(msg)
-        result = client.publish(topic,json_msg)
+            msg = json.dumps(json_msg)
+        result = client.publish(topic,msg)
         status = result[0]
         if status == 0:
             print(f"Send {msg} to topic {topic}")
@@ -55,7 +58,7 @@ def run():
     print("Inside run-publish loop")
     client = connect_mqtt()
     client.loop_start()
-    publish(client)
+    publish(client,fail=False)
     
 
 if __name__ == "__main__":

@@ -39,6 +39,8 @@ dependencies:
   provider: ^6.1.1
   mqtt_client: ^10.2.1
   google_maps_flutter: ^2.8.0
+  google_maps_flutter_web: ^0.5.10
+  toastification: ^2.1.0
 
 dev_dependencies:
   flutter_test:
