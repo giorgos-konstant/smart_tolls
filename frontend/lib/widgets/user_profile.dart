@@ -15,6 +15,7 @@ class UserProfile extends StatelessWidget {
     String email = auth.user!.email;
     String lp = auth.user!.licensePlate;
     int numTr = auth.user!.transactions.length;
+    String deviceId = auth.user!.deviceId;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,8 +46,9 @@ class UserProfile extends StatelessWidget {
               SizedBox(height: 30),
               Text('License Plate: $lp', style: TextStyle(fontSize: 20)),
               SizedBox(height: 30),
-              Text('Total transactions: $numTr',
-                  style: TextStyle(fontSize: 20)),
+              Text('Total transactions: $numTr',style: TextStyle(fontSize: 20)),
+              SizedBox(height: 30),
+              Text('Device ID: $deviceId',style: TextStyle(fontSize: 20)),
             ],
           ),
         ),

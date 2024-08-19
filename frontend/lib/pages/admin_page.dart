@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mqtt_client/mqtt_browser_client.dart';
+// import 'package:mqtt_client/mqtt_browser_client.dart';
 import '../services/auth.dart';
-import '../services/mqtt.dart';
+// import '../services/mqtt.dart';
 import '../widgets/admin_dashboard.dart';
-import '../widgets/admin_overview.dart';
-import '../widgets/admin_notifications.dart';
+import '../widgets/admin_transactions.dart';
+import '../widgets/admin_current_policy.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({super.key});
@@ -14,7 +14,7 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
     
-    final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp(auth);
+    // final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp(auth);
     
     return Scaffold(
       appBar: AppBar(
@@ -30,11 +30,11 @@ class AdminPage extends StatelessWidget {
   Widget _buildPage(AuthProvider auth) {
     switch (auth.currentIndex) {
       case 0:
-        return AdminOverview();
+        return AdminCurrentPolicy();
       case 1:
         return AdminDashboard();
       case 2:
-        return AdminNotifications();
+        return AdminTransactions();
       default:
         return AdminDashboard();
     }
@@ -51,7 +51,7 @@ class AdminPage extends StatelessWidget {
       },
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.notification_important_rounded, size: 35),
+          icon: Icon(Icons.currency_exchange_rounded, size: 35),
           label: 'Notifications',
         ),
         BottomNavigationBarItem(

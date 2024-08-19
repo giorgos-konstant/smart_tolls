@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
 
+// ignore: must_be_immutable
 class AdminDashboard extends StatelessWidget {
   AdminDashboard({super.key});
   late GoogleMapController mapController;
@@ -42,11 +44,12 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Map"),
-          elevation: 2,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
         ),
         body: GoogleMap(
             onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(target: _center, zoom: 12.0),
+            initialCameraPosition: CameraPosition(target: _center, zoom: 13.0),
             style: _mapStyleString,
             markers: {
               Marker(
@@ -57,8 +60,8 @@ class AdminDashboard extends StatelessWidget {
                           "Former TEI\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
               Marker(
                   markerId: MarkerId("Rio"),
-                  position: LatLng(38.2782150107921, 21.764902448385143),
-                  infoWindow: InfoWindow(title: "Rio\nZone A")),
+                  position: LatLng(38.27060317727781, 21.75716703731047),
+                  infoWindow: InfoWindow(title: "Rio\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
               Marker(
                   markerId: MarkerId("Akti Dymaion"),
                   position: LatLng(38.22412037147598, 21.721610010209183),
@@ -67,7 +70,7 @@ class AdminDashboard extends StatelessWidget {
                           "Akti Dymaion\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
               Marker(
                   markerId: MarkerId("Perivola"),
-                  position: LatLng(38.20881984547866, 21.767756576711133),
+                  position: LatLng(38.21281525203603, 21.757070609420534),
                   infoWindow: InfoWindow(
                       title:
                           "Perivola\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
@@ -79,7 +82,7 @@ class AdminDashboard extends StatelessWidget {
                           "Konstantinoupoleos\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
               Marker(
                   markerId: MarkerId("Othonos Amalias"),
-                  position: LatLng(38.24829535799488, 21.733775135347777),
+                  position: LatLng(38.24620574583648, 21.73017024635936),
                   infoWindow: InfoWindow(
                       title:
                           "Othonos Amalias\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
@@ -91,7 +94,7 @@ class AdminDashboard extends StatelessWidget {
                           "Germanou\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
               Marker(
                   markerId: MarkerId("Agiou Andreou"),
-                  position: LatLng(38.24800008429177, 21.734502546441178),
+                  position: LatLng(38.24561592510374, 21.730846163051964),
                   infoWindow: InfoWindow(
                       title:
                           "Agiou Andreou\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),

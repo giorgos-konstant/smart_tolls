@@ -113,3 +113,18 @@ class Transaction {
         timeStamp = json['timeStamp'] as String,
         chargeAmount = json['chargeAmount'] as double;
 }
+
+class TotalStatsPerToll {
+
+  final int totalTransactions;
+  final double totalMoney;
+
+  TotalStatsPerToll({
+    required this.totalTransactions,
+    required this.totalMoney,
+  });
+
+  TotalStatsPerToll.fromJson(Map<String,dynamic> json):
+    totalTransactions = json['totalTransactions'] as int,
+    totalMoney = json['totalMoney'] as double;
+}
