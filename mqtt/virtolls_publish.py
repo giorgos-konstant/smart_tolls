@@ -1,6 +1,8 @@
 from paho.mqtt import client as mqtt_client
 import time
 import random
+from datetime import datetime
+import json
 
 broker = "localhost"
 port = 1883
@@ -25,19 +27,27 @@ def connect_mqtt():
     return client
 
 def publish(client):
-    msg_count = 1
+    
+    i=0
     try:
-        while True:
-            time.sleep(random.randint(1,5))
-            msg = f"messages: {msg_count}"
+        while i<6:
+            time.sleep(random.randint(1,3))
             ind = random.randint(0,len(topics)-1)
+            now = datetime.now()
+            random_hour = random.randint(1,23)
+            now = now.replace(hour=random_hour)
+            json_msg = {
+                "deviceId" : "4f5g338967v48fv",
+                "timestamp" : now.isoformat()
+            }
+            msg = json.dumps(json_msg)
             result = client.publish(topics[ind],msg)
             status = result[0]
             if status == 0:
                 print(f"Send {msg} to topic {topics[ind]}")
             else:
                 print(f"Failed to send message to topic {topics[ind]}")
-            msg_count += 1
+            i+=1
     finally:
         client.disconnect()
         client.loop_stop()

@@ -3,7 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const {publishUpdate} = require('./backend_publish');       // import publishUpdate function
+const {publishUpdate} = require('./backend_publish');   // import publishUpdate function
 const messageEmitter = require('./backend_subscribe');      
 const app = express();
 const port = 5000;
@@ -108,19 +108,19 @@ const sampleChargingPolicies = [
   {
     zone: 'Zone A',
     regions: [
-      {name: 'Akti Dymaion', prices: {'08-12':1, '12-17':2, '17-20':3, '20-22': 4}},
+      {name: 'AktiDymaion', prices: {'08-12':1, '12-17':2, '17-20':3, '20-22': 4}},
       {name: 'Perivola', prices: {'08-12':5, '12-17':6, '17-20':7, '20-22': 8}},
-      {name: 'Tei', prices: {'08-12':9, '12-17':10, '17-20':11, '20-22': 12}},
+      {name: 'TEI', prices: {'08-12':9, '12-17':10, '17-20':11, '20-22': 12}},
       {name: 'Rio', prices: {'08-12':13, '12-17':14, '17-20':15, '20-22': 16}},
     ],
   },
   {
     zone: 'Zone B',
     regions: [
-      {name: 'Konpoleos', prices: {'08-12':0.1, '12-17':0.2, '17-20':0.3, '20-22': 0.4}},
-      {name: 'AgAndreou', prices: {'08-12':0.5, '12-17':0.6, '17-20':0.7, '20-22': 0.8}},
+      {name: 'Konstantinoupoleos', prices: {'08-12':0.1, '12-17':0.2, '17-20':0.3, '20-22': 0.4}},
+      {name: 'AgiouAndreou', prices: {'08-12':0.5, '12-17':0.6, '17-20':0.7, '20-22': 0.8}},
       {name: 'Germanou', prices: {'08-12':0.9, '12-17':1, '17-20':1.1, '20-22': 1.2}},
-      {name: 'OthAma', prices: {'08-12':1.3, '12-17':1.4, '17-20':1.5, '20-22': 1.6}},
+      {name: 'OthonosAmalias', prices: {'08-12':1.3, '12-17':1.4, '17-20':1.5, '20-22': 1.6}},
     ],
   },
 ];
@@ -132,28 +132,28 @@ const insertTransactions = async () => {
     await TransactionModel.deleteMany();
 
     // Fetch exisitng users
-    const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
-    const user2 = await UserModel.findById('65eb575d6d7f2c6ea527ca75');
+    const user1 = await UserModel.findById('66c3a5439e5a33c3922e2333');
+    const user2 = await UserModel.findById('66c3aa319e5a33c3922e23d3');
 
     // if (user1 || user2) {
     //   throw new Error('User not found');
     // }
 
-    if (!user1 || !user2) {
+    if (!(user1 || user2)) {
       throw new Error('User not found');
     }
 
     // Sample transactions for user (user)
     const user1Transactions = [
       {
-        userId: '65c610dd8c15a68dca123ac2',        // userId       
+        userId: '66c3a5439e5a33c3922e2333',        // userId       
         zone : 'Zone A',
         tollName : 'Akti Dymaion',
         timeStamp : new Date(),
         chargeAmount : 10,
       },
       {
-        userId: '65c610dd8c15a68dca123ac2',
+        userId: '66c3a5439e5a33c3922e2333',
         zone : 'Zone B',
         tollName : 'Konpoleos',
         timeStamp : new Date(),
@@ -164,14 +164,14 @@ const insertTransactions = async () => {
     // Sample transactions for user (newuser123)
     const user2Transactions = [
       {
-        userId: '65eb575d6d7f2c6ea527ca75',
+        userId: '66c3aa319e5a33c3922e23d3',
         zone : 'Zone A',
         tollName : 'Perivola',
         timeStamp: new Date(),
         chargeAmount : 5,
       },
       {
-        userId: '65eb575d6d7f2c6ea527ca75',
+        userId: '66c3aa319e5a33c3922e23d3',
         zone : 'Zone B',
         tollName : 'Rio',
         timeStamp : new Date(),
@@ -226,14 +226,14 @@ const insertTolls = async() => {
 
     // SAMPLE : Tolls
     const zonesAndRegions = [
-      { zone: 'Zone A', region: 'Akti Dymaion' },
+      { zone: 'Zone A', region: 'AktiDymaion' },
       { zone: 'Zone A', region: 'Perivola' },
-      { zone: 'Zone A', region: 'Tei' },
+      { zone: 'Zone A', region: 'TEI' },
       { zone: 'Zone A', region: 'Rio' },
-      { zone: 'Zone B', region: 'Konpoleos' },
-      { zone: 'Zone B', region: 'AgAndreou' },
+      { zone: 'Zone B', region: 'Konstantinoupoleos' },
+      { zone: 'Zone B', region: 'AgiouAndreou' },
       { zone: 'Zone B', region: 'Germanou' },
-      { zone: 'Zone B', region: 'OthAma' },
+      { zone: 'Zone B', region: 'OthonosAmalias' },
     ];
 
     for (const {zone, region} of zonesAndRegions) {
@@ -354,7 +354,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // DASHBOARD page load
-app.get('/dashboard', authenticateUser, async (req, res)=> { 
+app.get('/dashboard', async (req, res)=> { 
   try {
     const userWithDevice = await UserModel.findById(req.user._id).populate('device');
     console.log('userWithDevice:', userWithDevice);
@@ -464,45 +464,47 @@ app.post('/add-money', async(req, res) => {
 });
 
 // TOLL-PAYMENT
-messageEmitter.on('tollMessage', async ({toll_name, device_id, timestamp})=> {
+messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
     try {
+        console.log(tollName,deviceId,timestamp)
         // Find the device by device_id
-        const device = await DeviceModel.findOne({deviceId: device_id}).exec();
+        const device = await DeviceModel.findOne({deviceId: deviceId}).exec();
+        console.log(device)
         if (!device) {
-            return res.status(404).send({ message: 'Device not found' });
+            console.log('Device not found');
         }
         // Find the user associated with the device
         const user = await UserModel.findById(device.user).exec();
         if (!user) {
-            return res.status(404).send({ message: 'User not found' });
+          console.log('User not found');
         }
         // SHOULD FIND TOLL BY TOLL_NAME
         // Find the toll by toll_id
         //const toll = await TollModel.findById(toll_id).exec();
-        const toll = await TollModel.findOne({region: toll_name}).exec();
+        const toll = await TollModel.findOne({region: tollName}).exec();
         if(!toll) {
-            return res.status(404).send({ message: 'Toll not found' });
+          console.log('Toll not found');
         }
         
         const policy = await ChargingPolicyModel.findOne({zone: toll.zone}).exec()
         if (!policy) {
-            return res.status(404).send({ message: 'Charging policy not found' });
+          console.log('ChargePolicy not found');
           }
 
         // const {zone, region, policy} = toll;
         const {hours} = extractTimezone(timestamp);
-        const regionPolicy = policy.regions.find((r)=> r.name === region);
+        const regionPolicy = policy.regions.find((r)=> r.name === tollName);
         const chargeAmount = calculateChargeAmount(regionPolicy, hours);
 
         // Ensure user has sufficient balance
         if (user.balance < chargeAmount){
-            return res.status(400).send({message: 'Insufficient balance'});
+          console.log('Insuffiecient Balance');
         }
 
         // Create and save the new transaction
         const newTransaction = new TransactionModel({
             userId: user._id,
-            zone,
+            zone: toll.zone,
             tollName: toll.name,
             timeStamp: timestamp,
             chargeAmount,
@@ -527,7 +529,7 @@ messageEmitter.on('tollMessage', async ({toll_name, device_id, timestamp})=> {
 
         // Publish the data to the MQTT topic
         await publishUpdate(mqttData);
-        res.send({message:'Transaction processed', transaction: savedTransaction, balance: user.balance});
+        console.log('Transaction processed',savedTransaction,user.balance);
     } catch (error) {
         console.error('Error processing toll payment:', error);
       }

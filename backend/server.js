@@ -130,28 +130,28 @@ const insertTransactions = async () => {
     await TransactionModel.deleteMany();
 
     // Fetch exisitng users
-    const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
-    const user2 = await UserModel.findById('65eb575d6d7f2c6ea527ca75');
+    const user1 = await UserModel.findById('66c3a5439e5a33c3922e2333');
+    const user2 = await UserModel.findById('66c3aa319e5a33c3922e23d3');
 
     // if (user1 || user2) {
     //   throw new Error('User not found');
     // }
 
-    if (user1 || user2) {
+    if (!(user1 || user2)) {
       throw new Error('User not found');
     }
 
     // Sample transactions for user (user)
     const user1Transactions = [
       {
-        userId: '65c610dd8c15a68dca123ac2',        // userId       
+        userId: '66c3a5439e5a33c3922e2333',        // userId       
         zone : 'Zone A',
         tollName : 'Akti Dymaion',
         timeStamp : new Date(),
         chargeAmount : 10,
       },
       {
-        userId: '65c610dd8c15a68dca123ac2',
+        userId: '66c3a5439e5a33c3922e2333',
         zone : 'Zone B',
         tollName : 'Konpoleos',
         timeStamp : new Date(),
@@ -162,14 +162,14 @@ const insertTransactions = async () => {
     // Sample transactions for user (newuser123)
     const user2Transactions = [
       {
-        userId: '65eb575d6d7f2c6ea527ca75',
+        userId: '66c3aa319e5a33c3922e23d3',
         zone : 'Zone A',
         tollName : 'Perivola',
         timeStamp: new Date(),
         chargeAmount : 5,
       },
       {
-        userId: '65eb575d6d7f2c6ea527ca75',
+        userId: '66c3aa319e5a33c3922e23d3',
         zone : 'Zone B',
         tollName : 'Rio',
         timeStamp : new Date(),

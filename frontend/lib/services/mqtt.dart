@@ -33,7 +33,7 @@ Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
     } else {
       print("Failed to Connect");
     }
-    client.subscribe("backend/frontend", MqttQos.atLeastOnce);
+    client.subscribe("user/updates", MqttQos.atLeastOnce);
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> messages) {
       final topic = messages[0].topic;

@@ -1,7 +1,7 @@
 const mqtt = require('mqtt')
 
 // MQTT Client Setup
-const mqttBroker = 'mqtt://localhost';
+const mqttBroker = 'mqtt://localhost:1883';
 const mqttTopic = 'user/updates';
 const mqttClient = mqtt.connect(mqttBroker);
 
