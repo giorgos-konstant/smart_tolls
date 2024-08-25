@@ -1,6 +1,6 @@
-^D:\UNI\SEMESTER9\IOT\SMART_TOLLS_GIT\SMART_TOLLS\FRONTEND\WINDOWS\RUNNER\CMAKELISTS.TXT
+^C:\IOT\SMART_TOLLS_GIT\PROD\SMART_TOLLS\FRONTEND\WINDOWS\RUNNER\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/windows -BD:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64 --check-stamp-file D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/runner/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/IoT/smart_tolls_git/prod/smart_tolls/frontend/windows -BC:/IoT/smart_tolls_git/prod/smart_tolls/frontend/build/windows/x64 --check-stamp-file C:/IoT/smart_tolls_git/prod/smart_tolls/frontend/build/windows/x64/runner/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

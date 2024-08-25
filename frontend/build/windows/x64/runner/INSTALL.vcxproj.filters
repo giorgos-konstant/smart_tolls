@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\build\windows\x64\CMakeFiles\821ff7e0a13fb67e60cd9eda8449a194\INSTALL_force.rule">
+    <CustomBuild Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\build\windows\x64\CMakeFiles\f9e9e6599667b0db7390f7d37c640467\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{E9377EE8-7458-3E14-A39E-1B20BC458BAD}</UniqueIdentifier>
+      <UniqueIdentifier>{EC75A681-DE3A-3C8B-B711-0181625C74DD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

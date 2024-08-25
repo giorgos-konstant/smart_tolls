@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\build\windows\x64\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\build\windows\x64\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

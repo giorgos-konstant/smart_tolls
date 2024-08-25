@@ -108,7 +108,7 @@ const sampleChargingPolicies = [
   {
     zone: 'Zone A',
     regions: [
-      {name: 'AktiDymaion', prices: {'08-12':1, '12-17':2, '17-20':3, '20-22': 4}},
+      {name: 'Akti Dymaion', prices: {'08-12':1, '12-17':2, '17-20':3, '20-22': 4}},
       {name: 'Perivola', prices: {'08-12':5, '12-17':6, '17-20':7, '20-22': 8}},
       {name: 'TEI', prices: {'08-12':9, '12-17':10, '17-20':11, '20-22': 12}},
       {name: 'Rio', prices: {'08-12':13, '12-17':14, '17-20':15, '20-22': 16}},
@@ -118,9 +118,9 @@ const sampleChargingPolicies = [
     zone: 'Zone B',
     regions: [
       {name: 'Konstantinoupoleos', prices: {'08-12':0.1, '12-17':0.2, '17-20':0.3, '20-22': 0.4}},
-      {name: 'AgiouAndreou', prices: {'08-12':0.5, '12-17':0.6, '17-20':0.7, '20-22': 0.8}},
+      {name: 'Agiou Andreou', prices: {'08-12':0.5, '12-17':0.6, '17-20':0.7, '20-22': 0.8}},
       {name: 'Germanou', prices: {'08-12':0.9, '12-17':1, '17-20':1.1, '20-22': 1.2}},
-      {name: 'OthonosAmalias', prices: {'08-12':1.3, '12-17':1.4, '17-20':1.5, '20-22': 1.6}},
+      {name: 'Othonos Amalias', prices: {'08-12':1.3, '12-17':1.4, '17-20':1.5, '20-22': 1.6}},
     ],
   },
 ];
@@ -132,8 +132,8 @@ const insertTransactions = async () => {
     await TransactionModel.deleteMany();
 
     // Fetch exisitng users
-    const user1 = await UserModel.findById('66c3a5439e5a33c3922e2333');
-    const user2 = await UserModel.findById('66c3aa319e5a33c3922e23d3');
+    const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
+    const user2 = await UserModel.findById('65eb575d6d7f2c6ea527ca75');
 
     // if (user1 || user2) {
     //   throw new Error('User not found');
@@ -146,16 +146,16 @@ const insertTransactions = async () => {
     // Sample transactions for user (user)
     const user1Transactions = [
       {
-        userId: '66c3a5439e5a33c3922e2333',        // userId       
+        userId: '65c610dd8c15a68dca123ac2',        // userId       
         zone : 'Zone A',
         tollName : 'Akti Dymaion',
         timeStamp : new Date(),
         chargeAmount : 10,
       },
       {
-        userId: '66c3a5439e5a33c3922e2333',
+        userId: '65c610dd8c15a68dca123ac2',
         zone : 'Zone B',
-        tollName : 'Konpoleos',
+        tollName : 'Konstantinoupoleos',
         timeStamp : new Date(),
         chargeAmount : 20,
       },
@@ -164,14 +164,14 @@ const insertTransactions = async () => {
     // Sample transactions for user (newuser123)
     const user2Transactions = [
       {
-        userId: '66c3aa319e5a33c3922e23d3',
+        userId: '65eb575d6d7f2c6ea527ca75',
         zone : 'Zone A',
         tollName : 'Perivola',
         timeStamp: new Date(),
         chargeAmount : 5,
       },
       {
-        userId: '66c3aa319e5a33c3922e23d3',
+        userId: '65eb575d6d7f2c6ea527ca75',
         zone : 'Zone B',
         tollName : 'Rio',
         timeStamp : new Date(),
@@ -226,14 +226,14 @@ const insertTolls = async() => {
 
     // SAMPLE : Tolls
     const zonesAndRegions = [
-      { zone: 'Zone A', region: 'AktiDymaion' },
+      { zone: 'Zone A', region: 'Akti Dymaion' },
       { zone: 'Zone A', region: 'Perivola' },
       { zone: 'Zone A', region: 'TEI' },
       { zone: 'Zone A', region: 'Rio' },
       { zone: 'Zone B', region: 'Konstantinoupoleos' },
-      { zone: 'Zone B', region: 'AgiouAndreou' },
+      { zone: 'Zone B', region: 'Agiou Andreou' },
       { zone: 'Zone B', region: 'Germanou' },
-      { zone: 'Zone B', region: 'OthonosAmalias' },
+      { zone: 'Zone B', region: 'Othonos Amalias' },
     ];
 
     for (const {zone, region} of zonesAndRegions) {
@@ -425,12 +425,14 @@ app.get('/history', async (req, res) => {
 
 // ADD-MONEY for authenticated user
 app.post('/add-money', async(req, res) => {
-    // Validate request data
-    if (!userId || !amount || isNaN(amount)) {
-        return res.status(400).send('Invalid request data.')
-    }
   const userId = req.body.userId;
   const amountToAdd = parseFloat(req.body.amount);
+
+  // Validate request data
+  if (!userId || !amountToAdd || isNaN(amountToAdd)) {
+    return res.status(400).send('Invalid request data.')
+  }
+
   try {
     //console.log(userId);
     const user = await UserModel.findById(userId).populate('device');
@@ -505,11 +507,11 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
         const newTransaction = new TransactionModel({
             userId: user._id,
             zone: toll.zone,
-            tollName: toll.name,
+            tollName: toll.region,
             timeStamp: timestamp,
             chargeAmount,
         });
-
+        console.log("New Transaction:",newTransaction);
         const savedTransaction = await newTransaction.save();
         user.transactions.push(savedTransaction._id);
         user.balance -= chargeAmount;
@@ -520,16 +522,15 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
             balance: user.balance,
             transaction:{
                 id: savedTransaction._id,
-                zone: toll.zone,
-                tollName: toll.region,
+                zone: savedTransaction.zone,
+                tollName: savedTransaction.tollName,
                 timeStamp: savedTransaction.timeStamp,
                 chargeAmount: savedTransaction.chargeAmount,
             },
         };
-
         // Publish the data to the MQTT topic
         await publishUpdate(mqttData);
-        console.log('Transaction processed',savedTransaction,user.balance);
+        console.log('Transaction processed');
     } catch (error) {
         console.error('Error processing toll payment:', error);
       }

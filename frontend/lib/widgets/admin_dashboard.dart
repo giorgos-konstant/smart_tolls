@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_tolls/services/admin_post_get.dart';
 import '../services/auth.dart';
 
 // ignore: must_be_immutable
@@ -33,13 +34,9 @@ class AdminDashboard extends StatelessWidget {
     mapController = controller;
   }
 
-  void showInfo() {
-    print('showing info from toll station');
-  }
-
   @override
   Widget build(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
+    AdminAuthProvider auth = Provider.of<AdminAuthProvider>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -55,49 +52,59 @@ class AdminDashboard extends StatelessWidget {
               Marker(
                   markerId: MarkerId('Former TEI'),
                   position: LatLng(38.219161, 21.741320),
+                  onTap: () => getTotalStatsPerToll('TEI', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Former TEI\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Former TEI\nZone A\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Rio"),
                   position: LatLng(38.27060317727781, 21.75716703731047),
-                  infoWindow: InfoWindow(title: "Rio\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                  onTap: () => getTotalStatsPerToll('Rio', auth),
+                  infoWindow: InfoWindow(
+                      title:
+                          "Rio\nZone A\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Akti Dymaion"),
                   position: LatLng(38.22412037147598, 21.721610010209183),
+                  onTap: () => getTotalStatsPerToll('Akti Dymaion', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Akti Dymaion\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Akti Dymaion\nZone A\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Perivola"),
                   position: LatLng(38.21281525203603, 21.757070609420534),
+                  onTap: () => getTotalStatsPerToll('Perivola', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Perivola\nZone A\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Perivola\nZone A\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Konstantinoupoleos"),
                   position: LatLng(38.255407720401685, 21.74355054644139),
+                  onTap: () => getTotalStatsPerToll('Konstantinoupoleos', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Konstantinoupoleos\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Konstantinoupoleos\nZone B\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Othonos Amalias"),
                   position: LatLng(38.24620574583648, 21.73017024635936),
+                  onTap: () => getTotalStatsPerToll('Othonos Amalias', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Othonos Amalias\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Othonos Amalias\nZone B\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Germanou"),
                   position: LatLng(38.24218439703755, 21.744167021280408),
+                  onTap: () => getTotalStatsPerToll('Germanou', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Germanou\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Germanou\nZone B\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Agiou Andreou"),
                   position: LatLng(38.24561592510374, 21.730846163051964),
+                  onTap: () => getTotalStatsPerToll('Agiou Andreou', auth),
                   infoWindow: InfoWindow(
                       title:
-                          "Agiou Andreou\nZone B\nTotal Transactions: 50\nTotal Value: 50 Euros")),
+                          "Agiou Andreou\nZone B\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
             }));
   }
 }

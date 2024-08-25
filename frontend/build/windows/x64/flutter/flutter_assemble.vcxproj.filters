@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\build\windows\x64\CMakeFiles\bda9409de9b1a9baf576454facd0c717\flutter_windows.dll.rule">
+    <CustomBuild Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\build\windows\x64\CMakeFiles\ac7d4a5d072722af072efae7b8062bbb\flutter_windows.dll.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\build\windows\x64\CMakeFiles\7d43bcd45b28c039ed4217f5eda721b3\flutter_assemble.rule">
+    <CustomBuild Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\build\windows\x64\CMakeFiles\99aa5f516fd6bedf8f3643fc50c3092f\flutter_assemble.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\CMakeLists.txt" />
+    <CustomBuild Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
+    <None Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{E9377EE8-7458-3E14-A39E-1B20BC458BAD}</UniqueIdentifier>
+      <UniqueIdentifier>{EC75A681-DE3A-3C8B-B711-0181625C74DD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

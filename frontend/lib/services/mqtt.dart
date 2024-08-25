@@ -6,24 +6,24 @@ import 'dart:convert';
 import 'package:toastification/toastification.dart';
 import 'package:smart_tolls/models/models.dart';
 
-Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
+mqttBrokerSetUp(AuthProvider auth, String clientName) async {
   try {
-    var client = MqttBrowserClient('ws://localhost:9001', '');
+    var client = MqttBrowserClient('ws://localhost', clientName);
     client.websocketProtocols = ['mqtt'];
     client.port = 9001;
-    client.keepAlivePeriod = 20;
+    client.keepAlivePeriod = 60;
     client.logging(on: false);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
-    client.onSubscribed = onSubscribed;
-    client.onSubscribeFail = onSubscribeFail;
+    // client.autoReconnect = true;
+    client.resubscribeOnAutoReconnect = false;
     client.onAutoReconnect = onAutoReconnect;
     client.onAutoReconnected = onAutoReconnected;
 
     final connMessage = MqttConnectMessage()
-        .withClientIdentifier('frontend_client')
+        .withClientIdentifier(clientName)
         .startClean()
-        .withWillQos(MqttQos.atLeastOnce);
+        .withWillQos(MqttQos.exactlyOnce);
 
     client.connectionMessage = connMessage;
 
@@ -33,8 +33,8 @@ Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
     } else {
       print("Failed to Connect");
     }
-    client.subscribe("user/updates", MqttQos.atLeastOnce);
 
+    client.subscribe("user/updates", MqttQos.exactlyOnce);
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> messages) {
       final topic = messages[0].topic;
       final message = messages[0].payload as MqttPublishMessage;
@@ -43,12 +43,13 @@ Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
       print("!!!!Received message $decoded from topic: $topic");
       if (decoded != 'failed') {
         final Map<String, dynamic> data = jsonDecode(decoded);
-        double updatedBalance = data['updatedBalance'] as double;
-        String userId = data['newTransaction']['userId'] as String;
-        String zone = data['newTransaction']['zone'] as String;
-        String tollName = data['newTransaction']['tollName'] as String;
-        String timeStamp = data['newTransaction']['timeStamp'] as String;
-        double chargeAmount = data['newTransaction']['chargeAmount'] as double;
+        double updatedBalance = data['balance'] as double;
+        String userId = data['transaction']['id'] as String;
+        String zone = data['transaction']['zone'] as String;
+        String tollName = data['transaction']['tollName'] as String;
+        String timeStamp = data['transaction']['timeStamp'] as String;
+        double chargeAmount =
+            data['transaction']['chargeAmount'].toDouble() as double;
         Transaction newTransaction = Transaction(
             userId: userId,
             zone: zone,
@@ -66,7 +67,7 @@ Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
             transactions: auth.user!.transactions);
 
         toastification.show(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             autoCloseDuration: Duration(seconds: 3),
             type: ToastificationType.success,
             style: ToastificationStyle.fillColored,
@@ -75,18 +76,17 @@ Future<MqttBrowserClient?> mqttBrokerSetUp(AuthProvider auth) async {
         auth.setUser(updatedUser);
       } else {
         toastification.show(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             autoCloseDuration: Duration(seconds: 3),
             type: ToastificationType.error,
             style: ToastificationStyle.fillColored,
             primaryColor: Colors.red);
       }
+      client.unsubscribe('user/updates');
     });
-
-    return client;
   } catch (e) {
     print("Exception $e");
-    return null;
+    throw Error;
   }
 }
 

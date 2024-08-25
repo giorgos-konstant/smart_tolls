@@ -1,28 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\core_implementations.cc">
+    <ClCompile Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\core_implementations.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\standard_codec.cc">
+    <ClCompile Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\standard_codec.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\flutter_engine.cc">
+    <ClCompile Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\flutter_engine.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\flutter_view_controller.cc">
+    <ClCompile Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\ephemeral\cpp_client_wrapper\flutter_view_controller.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\CMakeLists.txt" />
+    <CustomBuild Include="C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{E9377EE8-7458-3E14-A39E-1B20BC458BAD}</UniqueIdentifier>
+      <UniqueIdentifier>{EC75A681-DE3A-3C8B-B711-0181625C74DD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{934E0B4C-2679-3D30-98B5-5FFBD42DC672}</UniqueIdentifier>
+      <UniqueIdentifier>{DFBD88D2-1241-3179-A0F2-83657D4A0BDC}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

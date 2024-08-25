@@ -1,6 +1,6 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mqtt_client/mqtt_browser_client.dart';
 import '../services/auth.dart';
 import '../services/mqtt.dart';
 import '../widgets/dashboard.dart';
@@ -13,9 +13,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-    
-    final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp(auth);
-    
+    String clientName = 'subscribe-${Random().nextInt(1000)}';
+
+    mqttBrokerSetUp(auth, clientName);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -42,7 +43,6 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNavigationBar(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-    
 
     return BottomNavigationBar(
       currentIndex: auth.currentIndex,

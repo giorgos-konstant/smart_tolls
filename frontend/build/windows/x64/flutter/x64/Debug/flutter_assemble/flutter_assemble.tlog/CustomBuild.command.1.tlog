@@ -1,6 +1,6 @@
-^D:\UNI\SEMESTER9\IOT\SMART_TOLLS_GIT\SMART_TOLLS\FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\BDA9409DE9B1A9BAF576454FACD0C717\FLUTTER_WINDOWS.DLL.RULE
+^C:\IOT\SMART_TOLLS_GIT\PROD\SMART_TOLLS\FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\AC7D4A5D072722AF072EFAE7B8062BBB\FLUTTER_WINDOWS.DLL.RULE
 setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=C:\Users\gkons\flutter PROJECT_DIR=D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend FLUTTER_ROOT=C:\Users\gkons\flutter FLUTTER_EPHEMERAL_DIR=D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\windows\flutter\ephemeral PROJECT_DIR=D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend FLUTTER_TARGET=D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\lib\main.dart DART_DEFINES=RkxVVFRFUl9XRUJfQ0FOVkFTS0lUX1VSTD1odHRwczovL3d3dy5nc3RhdGljLmNvbS9mbHV0dGVyLWNhbnZhc2tpdC9lZGQ4NTQ2MTE2NDU3YmRmMWM1YmRmYjEzZWNiOTQ2M2QyYmI1ZWQ0Lw== DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=D:\uni\semester9\IoT\smart_tolls_git\smart_tolls\frontend\.dart_tool\package_config.json C:/Users/gkons/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=C:\flutter PROJECT_DIR=C:\IoT\smart_tolls_git\prod\smart_tolls\frontend FLUTTER_ROOT=C:\flutter FLUTTER_EPHEMERAL_DIR=C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\windows\flutter\ephemeral PROJECT_DIR=C:\IoT\smart_tolls_git\prod\smart_tolls\frontend FLUTTER_TARGET=C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\lib\main.dart DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=C:\IoT\smart_tolls_git\prod\smart_tolls\frontend\.dart_tool\package_config.json C:/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
@@ -8,7 +8,7 @@ endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
-^D:\UNI\SEMESTER9\IOT\SMART_TOLLS_GIT\SMART_TOLLS\FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\7D43BCD45B28C039ED4217F5EDA721B3\FLUTTER_ASSEMBLE.RULE
+^C:\IOT\SMART_TOLLS_GIT\PROD\SMART_TOLLS\FRONTEND\BUILD\WINDOWS\X64\CMAKEFILES\99AA5F516FD6BEDF8F3643FC50C3092F\FLUTTER_ASSEMBLE.RULE
 setlocal
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
@@ -16,9 +16,9 @@ endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
-^D:\UNI\SEMESTER9\IOT\SMART_TOLLS_GIT\SMART_TOLLS\FRONTEND\WINDOWS\FLUTTER\CMAKELISTS.TXT
+^C:\IOT\SMART_TOLLS_GIT\PROD\SMART_TOLLS\FRONTEND\WINDOWS\FLUTTER\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/windows -BD:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64 --check-stamp-file D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/build/windows/x64/flutter/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/IoT/smart_tolls_git/prod/smart_tolls/frontend/windows -BC:/IoT/smart_tolls_git/prod/smart_tolls/frontend/build/windows/x64 --check-stamp-file C:/IoT/smart_tolls_git/prod/smart_tolls/frontend/build/windows/x64/flutter/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

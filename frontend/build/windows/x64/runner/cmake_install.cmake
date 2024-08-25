@@ -1,4 +1,4 @@
-# Install script for directory: D:/uni/semester9/IoT/smart_tolls_git/smart_tolls/frontend/windows/runner
+# Install script for directory: C:/IoT/smart_tolls_git/prod/smart_tolls/frontend/windows/runner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
