@@ -12,10 +12,10 @@ class AdminPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
-    
+    AdminAuthProvider auth = Provider.of<AdminAuthProvider>(context);
+
     // final Future<MqttBrowserClient?> mqttbroker  = mqttBrokerSetUp(auth);
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -27,7 +27,7 @@ class AdminPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPage(AuthProvider auth) {
+  Widget _buildPage(AdminAuthProvider auth) {
     switch (auth.currentIndex) {
       case 0:
         return AdminCurrentPolicy();
@@ -41,8 +41,7 @@ class AdminPage extends StatelessWidget {
   }
 
   Widget _buildNavigationBar(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
-    
+    AdminAuthProvider auth = Provider.of<AdminAuthProvider>(context);
 
     return BottomNavigationBar(
       currentIndex: auth.currentIndex,

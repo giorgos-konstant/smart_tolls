@@ -20,7 +20,18 @@
       "name": "Flutter Web (HTML Renderer)",
       "request": "launch",
       "type": "dart",
-      "program": "frontend/lib/main.dart",
+      "program": "frontend/lib/app.dart",
+      "args": [
+        "--web-renderer",
+        "html"
+      ],
+      "deviceId": "chrome"
+    },
+    {
+      "name": "Flutter Web Admin",
+      "request": "launch",
+      "type": "dart",
+      "program": "frontend/lib/admin_app.dart",
       "args": [
         "--web-renderer",
         "html"
@@ -44,7 +55,7 @@
       "name": "Flutter Windows",
       "request": "launch",
       "type": "dart",
-      "program": "frontend/lib/main.dart",
+      "program": "frontend/lib/app.dart",
       "deviceId": "windows"
     },
   ],

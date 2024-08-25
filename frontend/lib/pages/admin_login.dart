@@ -52,11 +52,11 @@ class AdminLoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
                 User? user = await loginUser(username, password);
-                CurrentPolicy? chargePolicy = await getCurrentPolicy();
+                // CurrentPolicy? chargePolicy = await getCurrentPolicy();
 
                 if (user != null) {
                   auth.setUser(user);
-                  auth.setCurPolicy(chargePolicy!);
+                  // auth.setCurPolicy(chargePolicy!);
 
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AdminPage()));
