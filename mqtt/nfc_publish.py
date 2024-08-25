@@ -1,6 +1,8 @@
 from paho.mqtt import client as mqtt_client
 import time
 import random
+from datetime import datetime
+import json
 from py_acr122u import nfc
 from py_acr122u import error
 from nfc_read import nfc_read
@@ -8,7 +10,7 @@ from nfc_read import nfc_read
 
 broker = "localhost"
 port = 1883
-topic = "tolls/Rio"
+topic = "tolls/TEI"
 mqtt_client.connected_flag = False
 client_id = f'publish-{random.randint(0, 1000)}'
 
@@ -27,7 +29,6 @@ def connect_mqtt():
     return client
 
 def publish(client):
-    msg_count = 1
     try:
         time.sleep(1)
         while True:
@@ -35,15 +36,20 @@ def publish(client):
                 print("nothing happening right now")
                 time.sleep(1)
             else:
-                msg = f"msg {msg_count}"
-                result = f'messages: {msg_count}'
+                now = datetime.now()
+                # random_hour = random.randint(1,23)
+                # now = now.replace(hour=random_hour)
+                json_msg = {
+                    "deviceId" : "342",
+                    "timestamp" : now.isoformat()
+                }
+                msg = json.dumps(json_msg)
                 result = client.publish(topic,msg)
                 status = result[0]
                 if status == 0:
                     print(f"Send {msg} to topic {topic} from NFC reader")
                 else:
                     print(f"Failed to send message to topic {topic}")
-                msg_count += 1
                 time.sleep(1)
     finally:
         client.disconnect()
