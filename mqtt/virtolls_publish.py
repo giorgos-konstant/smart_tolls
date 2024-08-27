@@ -26,7 +26,7 @@ def connect_mqtt():
     client.connect(broker,port)
     return client
 
-def publish(client):
+def publish(client,fail):
     
     i=0
     try:
@@ -40,7 +40,10 @@ def publish(client):
                 "deviceId" : "45",
                 "timestamp" : now.isoformat()
             }
-            msg = json.dumps(json_msg)
+            if fail:
+                msg = 'failed'
+            else:
+                msg = json.dumps(json_msg)
             result = client.publish(topics[ind],msg)
             status = result[0]
             if status == 0:
@@ -56,7 +59,7 @@ def run():
     print("Inside run-publish loop")
     client = connect_mqtt()
     client.loop_start()
-    publish(client)
+    publish(client,False)
     
 
 

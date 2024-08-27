@@ -20,7 +20,7 @@ class Dashboard extends StatelessWidget {
             content: TextField(
               controller: amountController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Enter Amount'),
+              decoration: InputDecoration(labelText: 'Enter Desired Amount'),
             ),
             actions: [
               TextButton(
@@ -59,62 +59,78 @@ class Dashboard extends StatelessWidget {
     String balanceString = '${balance.toStringAsFixed(2)} EUR';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Remaining Balance:',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              balanceString,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        appBar: AppBar(
+          title: const Text('Dashboard'),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+        ),
+        body: Container(
+          decoration: BoxDecoration(),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    double? amount = await _showAddBalanceDialog(context);
-                    if (amount != null) {
-                      await updateBalance(amount, auth.user!.userId);
-                    }
-                  },
-                  icon: Icon(Icons.add, size: 50),
-                  label: Text('Add Money', style: TextStyle(fontSize: 15)),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
+                Text(
+                  'Remaining Balance:',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => UserProfile()));
-                  },
-                  icon: Icon(Icons.account_circle_rounded, size: 50),
-                  label: Text('Profile', style: TextStyle(fontSize: 15)),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                SizedBox(height: 15.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        child: Icon(Icons.account_balance_wallet_rounded,
+                            size: 50)),
+                    SizedBox(width: 30),
+                    Text(
+                      balanceString,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ],
+                ),
+                SizedBox(height: 40.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        double? amount = await _showAddBalanceDialog(context);
+                        if (amount != null) {
+                          await updateBalance(amount, auth.user!.userId);
+                        }
+                      },
+                      icon: Icon(Icons.add, size: 50),
+                      label: Text('Update Balance',
+                          style: TextStyle(fontSize: 20)),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserProfile()));
+                      },
+                      icon: Icon(Icons.account_circle_rounded, size: 50),
+                      label: Text('Profile', style: TextStyle(fontSize: 20)),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

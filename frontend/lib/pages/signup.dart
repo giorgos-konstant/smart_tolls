@@ -21,18 +21,16 @@ class SignUpPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
-      ),
+          title: Text("Sign Up", style: TextStyle(fontSize: 25)),
+          centerTitle: true),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding:
+              EdgeInsets.only(left: 250, right: 250, top: 200, bottom: 250),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
-              Text("Sign up Page", style: TextStyle(fontSize: 30)),
-              SizedBox(height: 50),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
@@ -54,7 +52,7 @@ class SignUpPage extends StatelessWidget {
                 controller: valPasswordController,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelText: 'Re-enter password',
+                  labelText: 'Validate password',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -62,7 +60,7 @@ class SignUpPage extends StatelessWidget {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  labelText: 'e-mail adress',
+                  labelText: 'Email Adress',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -83,7 +81,10 @@ class SignUpPage extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
+              Text(auth.loginFailMsg,
+                  style: TextStyle(color: Colors.red, fontSize: 20)),
+              SizedBox(height: 30),
               ElevatedButton(
                   onPressed: () async {
                     String username = usernameController.text;
@@ -98,8 +99,12 @@ class SignUpPage extends StatelessWidget {
                     auth.setUser(user!);
                     ChargePolicy? chargePolicy = await getPolicy();
                     auth.setChargePolicy(chargePolicy!);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
+                    if (user != null) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
+                    } else {
+                      auth.loginMsg('Sign Up failed. Please the credentials.');
+                    }
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 20))),
             ],

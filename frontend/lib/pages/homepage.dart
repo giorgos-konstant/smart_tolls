@@ -13,8 +13,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-    String clientName = 'subscribe-${Random().nextInt(1000)}';
 
+    String clientName = 'subscribe-${1000}}';
     mqttBrokerSetUp(auth, clientName);
 
     return Scaffold(

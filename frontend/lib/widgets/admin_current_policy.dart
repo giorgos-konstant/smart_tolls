@@ -12,138 +12,205 @@ class AdminCurrentPolicy extends StatelessWidget {
     CurrentPolicy cp = auth.currentPolicy;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Charge Policy'),
+        title: Text('Current Charge Policy'),
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      body: Center(
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Column(
-            children: [
-              SizedBox(height: 30),
-              Text(
-                'Zone A',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    backgroundColor: Colors.red,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 30),
-              Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                border: TableBorder.all(),
-                children: [
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Location'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(cp.zoneCurrentPolicies[0].timeZone))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Akti Dymaion'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[0].regions[0].price}')))
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Perivola'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[0].regions[1].price}'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Former TEI'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[0].regions[2].price}'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Rio'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[0].regions[3].price}'))),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 30),
-              Text(
-                'Zone B',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    backgroundColor: Colors.orange,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 30),
-              Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                border: TableBorder.all(),
-                children: [
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Location'))),
-                      TableCell(child: Container(child: Text('08:00-12:00'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Kon/poleos'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[1].regions[0].price}'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Ag. Andreou'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[1].regions[1].price}'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Germanou'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[1].regions[2].price}'))),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      TableCell(child: Center(child: Text('Othonos-Amalias'))),
-                      TableCell(
-                          child: Container(
-                              child: Text(
-                                  '${cp.zoneCurrentPolicies[1].regions[3].price}'))),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      //     body: Center(
+      //       child: SizedBox(
+      //         width: double.infinity,
+      //         height: double.infinity,
+      //         child: Column(
+      //           children: [
+      //             SizedBox(height: 30),
+      //             Container(
+      //                 decoration: BoxDecoration(
+      //                   border: Border.all(color: Colors.orange[400]!, width: 1.0),
+      //                   borderRadius: BorderRadius.circular(8.0),
+      //                 ),
+      //                 child: Text(
+      //                   ' Zone A  ',
+      //                   textAlign: TextAlign.center,
+      //                   style: TextStyle(
+      //                       color: Colors.white70,
+      //                       fontSize: 20,
+      //                       fontWeight: FontWeight.bold),
+      //                 )),
+      //             SizedBox(height: 30),
+      //             Table(
+      //               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      //               border: TableBorder.all(
+      //                   color: Colors.blueGrey,
+      //                   borderRadius: BorderRadius.all(Radius.circular(5))),
+      //               children: [
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Container(
+      //                             padding: EdgeInsets.all(15),
+      //                             alignment: Alignment.center,
+      //                             color: Colors.blueGrey[700]!,
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15), 'Location'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 'Akti Dymaion'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(
+      //                                     fontSize: 15,
+      //                                     fontWeight: FontWeight.bold),
+      //                                 '${cp.zoneCurrentPolicies[0].regions[0].price}')))
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15), 'Perivola'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(
+      //                                     fontSize: 15,
+      //                                     fontWeight: FontWeight.bold),
+      //                                 '${cp.zoneCurrentPolicies[0].regions[1].price}'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 'Former TEI'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(
+      //                                     fontSize: 15,
+      //                                     fontWeight: FontWeight.bold),
+      //                                 '${cp.zoneCurrentPolicies[0].regions[2].price}'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child:
+      //                                 Text(style: TextStyle(fontSize: 15), 'Rio'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(
+      //                                     fontSize: 15,
+      //                                     fontWeight: FontWeight.bold),
+      //                                 '${cp.zoneCurrentPolicies[0].regions[3].price}'))),
+      //                   ],
+      //                 ),
+      //               ],
+      //             ),
+      //             SizedBox(height: 30),
+      //             Container(
+      //                 decoration: BoxDecoration(
+      //                   border: Border.all(color: Colors.orange[400]!, width: 1.0),
+      //                   borderRadius: BorderRadius.circular(8.0),
+      //                 ),
+      //                 child: Text(
+      //                   ' Zone B  ',
+      //                   textAlign: TextAlign.center,
+      //                   style: TextStyle(
+      //                       color: Colors.white70,
+      //                       fontSize: 20,
+      //                       fontWeight: FontWeight.bold),
+      //                 )),
+      //             SizedBox(height: 30),
+      //             Table(
+      //               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      //               border: TableBorder.all(),
+      //               children: [
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(child: Center(child: Text('Location'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             padding: EdgeInsets.all(15),
+      //                             alignment: Alignment.center,
+      //                             color: Colors.blueGrey[700]!,
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 '08:00-12:00'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 'Kon/poleos'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 '${cp.zoneCurrentPolicies[1].regions[0].price}'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 'Ag. Andreou'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 '${cp.zoneCurrentPolicies[1].regions[1].price}'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15), 'Germanou'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 '${cp.zoneCurrentPolicies[1].regions[2].price}'))),
+      //                   ],
+      //                 ),
+      //                 TableRow(
+      //                   children: [
+      //                     TableCell(
+      //                         child: Center(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 'Othonos-Amalias'))),
+      //                     TableCell(
+      //                         child: Container(
+      //                             child: Text(
+      //                                 style: TextStyle(fontSize: 15),
+      //                                 '${cp.zoneCurrentPolicies[1].regions[3].price}'))),
+      //                   ],
+      //                 ),
+      //               ],
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
     );
   }
 }

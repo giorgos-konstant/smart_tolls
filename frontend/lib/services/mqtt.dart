@@ -67,6 +67,8 @@ mqttBrokerSetUp(AuthProvider auth, String clientName) async {
             transactions: auth.user!.transactions);
 
         toastification.show(
+            title: Text('Successfull Transaction'),
+            description: Text("Station: $tollName"),
             alignment: Alignment.topCenter,
             autoCloseDuration: Duration(seconds: 3),
             type: ToastificationType.success,
@@ -76,6 +78,7 @@ mqttBrokerSetUp(AuthProvider auth, String clientName) async {
         auth.setUser(updatedUser);
       } else {
         toastification.show(
+            title: Text("Transaction Failed"),
             alignment: Alignment.topCenter,
             autoCloseDuration: Duration(seconds: 3),
             type: ToastificationType.error,

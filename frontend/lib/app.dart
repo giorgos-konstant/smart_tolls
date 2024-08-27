@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SmartTolls',
       theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue.shade500, brightness: Brightness.dark)),
       home: LoginPage(),
     ));
   }

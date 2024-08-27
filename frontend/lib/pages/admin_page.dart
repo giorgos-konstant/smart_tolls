@@ -51,7 +51,7 @@ class AdminPage extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.currency_exchange_rounded, size: 35),
-          label: 'Notifications',
+          label: 'Policy',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.space_dashboard, size: 35),

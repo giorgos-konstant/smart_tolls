@@ -4,7 +4,6 @@ import '../services/auth.dart';
 import '../models/models.dart';
 import '../services/post_get.dart';
 import 'homepage.dart';
-import 'admin_page.dart';
 import 'signup.dart';
 
 class LoginPage extends StatelessWidget {
@@ -20,15 +19,17 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Log In"),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(250.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
             TextField(
+              style: TextStyle(fontSize: 20),
               controller: usernameController,
               decoration: InputDecoration(
                 labelText: 'username',
@@ -37,6 +38,7 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
+              style: TextStyle(fontSize: 20),
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
@@ -54,33 +56,39 @@ class LoginPage extends StatelessWidget {
                 String password = passwordController.text;
                 User? user = await loginUser(username, password);
                 ChargePolicy? chargePolicy = await getPolicy();
-                
+
                 if (user != null) {
                   auth.setUser(user);
                   auth.setChargePolicy(chargePolicy!);
 
-                  if (user.username == 'admin') {
-                    Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AdminPage()));
-                  }
-                  else {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  }
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 } else {
                   auth.loginMsg('Login Failed. Invalid username/password.');
                 }
               },
-              child: Text("Log In", style: TextStyle(fontSize: 20)),
+              child: Text("Log In", style: TextStyle(fontSize: 25)),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()));
-              },
-              child: Text('Sign Up', style: TextStyle(fontSize: 20)),
-            ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: TextStyle(fontSize: 15),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()));
+                  },
+                  child: Text('Sign Up', style: TextStyle(fontSize: 15)),
+                ),
+              ],
+            )
+
+            // SizedBox(height: 30),
           ],
         ),
       ),

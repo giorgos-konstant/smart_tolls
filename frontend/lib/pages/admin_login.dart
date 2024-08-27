@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_tolls/services/admin_post_get.dart';
 import '../services/auth.dart';
 import '../models/models.dart';
 import '../services/post_get.dart';
@@ -18,16 +17,21 @@ class AdminLoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Log In"),
+        title: Text(
+          "Admin Log In",
+          style: TextStyle(fontSize: 25),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(250.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
             TextField(
+              style: TextStyle(fontSize: 20),
               controller: usernameController,
               decoration: InputDecoration(
                 labelText: 'username',
@@ -36,6 +40,7 @@ class AdminLoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
+              style: TextStyle(fontSize: 20),
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
@@ -43,7 +48,7 @@ class AdminLoginPage extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             Text(auth.loginFailMsg,
                 style: TextStyle(color: Colors.red, fontSize: 20)),
             SizedBox(height: 20),
@@ -64,7 +69,7 @@ class AdminLoginPage extends StatelessWidget {
                   auth.loginMsg('Login Failed. Invalid username/password.');
                 }
               },
-              child: Text("Log In", style: TextStyle(fontSize: 20)),
+              child: Text("Log In", style: TextStyle(fontSize: 25)),
             ),
           ],
         ),
