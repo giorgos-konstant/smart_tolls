@@ -1,2 +1,26 @@
-Instructions for FIWARE
-------------------------
+Instructions for FIWARE Orion Context Broker Set Up
+----------------------------------------------------
+1. Download Docker Desktop for Windows
+2. Install Docker Desktop (Automatically installs WSL 2 from Microsoft)
+3. Verify Docker Installation
+  docker --version
+4. Pull latest version of FIWARE from DockerHub
+  docker pull fiware/orion
+5. Start Orion Coext Broker Container
+  docker run -d --name orion -p 1026:1026 fiware/orion
+6. Verify Containter is running
+  docker ps
+(the 'orion' container should be listed as running)
+7. To manage Orion Context Broker :
+  docker stop orion
+  docker start orion
+  docker rm orion
+
+!! MongoDB needed to store all context data for Orion !!
+
+8. Install MongoDB database
+  docker run -d --name mongodb -p 27017:27017 mongo
+9. Connect Orion to MongoDB
+( maybe needs to rm orion container and build it again already linked to mongo)
+docker run -d --name orion --link mongodb:mongodb -p 1026:1026 fiware/orion -dbURI
+10. 
