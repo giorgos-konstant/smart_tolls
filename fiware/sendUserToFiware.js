@@ -1,3 +1,9 @@
+// TO RUN PROPERLY :
+// Inside fiware directory :
+// npm init -y
+// npm install axios
+// node sendUserToFiware.js
+
 const axios = require('axios');
 
 const userDocument = {
