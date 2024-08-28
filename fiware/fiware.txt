@@ -23,4 +23,10 @@ Instructions for FIWARE Orion Context Broker Set Up
 9. Connect Orion to MongoDB
 ( maybe needs to rm orion container and build it again already linked to mongo)
 docker run -d --name orion --link mongodb:mongodb -p 1026:1026 fiware/orion -dbURI
-10. 
+10. Check if MongoDB is accessible by running a command inside Orion Container to access it 
+  docker exec -it orion mongo --host mongodb --eval 'db.runCommand({ connectionStatus: 1 })'
+11. Interact with Orion Context Broker and check that everything is ok
+  curl http://localhost:1026/version
+
+Orion Context Broker is running properly on Docker setup
+Listening on port 1026...
