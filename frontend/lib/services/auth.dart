@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 
 class AdminAuthProvider extends ChangeNotifier {
-  User? _admin;
-  User? get admin => _admin;
+  AdminUser? _admin;
+  AdminUser? get admin => _admin;
 
   int _currentIndex = 1;
   int get currentIndex => _currentIndex;
@@ -13,13 +13,13 @@ class AdminAuthProvider extends ChangeNotifier {
   String get loginFailMsg => _loginFailMsg;
 
   TotalStatsPerToll _total =
-      new TotalStatsPerToll(totalTransactions: 0, totalMoney: 0.0);
+      TotalStatsPerToll(totalTransactions: 0, totalMoney: 0.0, currentPrice: 0.0);
   TotalStatsPerToll get total => _total;
 
-  CurrentPolicy _currentPolicy = new CurrentPolicy(zoneCurrentPolicies: []);
+  CurrentPolicy _currentPolicy = CurrentPolicy(regionCurrentPolicies: []);
   CurrentPolicy get currentPolicy => _currentPolicy;
 
-  void setUser(User newAdmin) {
+  void setAdmin(AdminUser newAdmin) {
     _admin = newAdmin;
     notifyListeners();
   }

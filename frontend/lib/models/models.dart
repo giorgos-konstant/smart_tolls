@@ -29,6 +29,19 @@ class User {
             .toList();
 }
 
+class AdminUser {
+  final List<AdminTransaction> transactions;
+
+  AdminUser({
+    required this.transactions,
+  });
+
+  AdminUser.fromJson(Map<String, dynamic> json)
+      : transactions = json['transactions']
+            .map<AdminTransaction>((item) => AdminTransaction.fromJson(item))
+            .toList();
+}
+
 class ChargePolicy {
   final List<ZonePolicy> zonePolicies;
 
@@ -114,62 +127,76 @@ class Transaction {
         chargeAmount = json['chargeAmount'].toDouble() as double;
 }
 
+class AdminTransaction {
+  final String objId;
+  final String userId;
+  final String zone;
+  final String tollName;
+  final String timeStamp;
+  final double chargeAmount;
+
+  AdminTransaction({
+    required this.objId,
+    required this.userId,
+    required this.zone,
+    required this.tollName,
+    required this.timeStamp,
+    required this.chargeAmount,
+  });
+
+  AdminTransaction.fromJson(Map<String, dynamic> json)
+      : objId = json['_id'] as String,
+        userId = json['userId'] as String,
+        zone = json['zone'] as String,
+        tollName = json['tollName'] as String,
+        timeStamp = json['timeStamp'] as String,
+        chargeAmount = json['chargeAmount'].toDouble() as double;
+}
+
 class TotalStatsPerToll {
   final int totalTransactions;
   final double totalMoney;
+  final double currentPrice;
 
   TotalStatsPerToll({
     required this.totalTransactions,
     required this.totalMoney,
+    required this.currentPrice
   });
 
   TotalStatsPerToll.fromJson(Map<String, dynamic> json)
       : totalTransactions = json['totalTransactions'] as int,
-        totalMoney = json['totalMoney'].toDouble() as double;
+        totalMoney = json['totalMoney'].toDouble() as double,
+        currentPrice = json['currentPrice'].toDouble() as double;
 }
 
 // admin needed charging policy
 class CurrentPolicy {
-  final List<ZoneCurrentPolicy> zoneCurrentPolicies;
+  final List<CurrentRegionPolicy> regionCurrentPolicies;
 
-  CurrentPolicy({required this.zoneCurrentPolicies});
+  CurrentPolicy({required this.regionCurrentPolicies});
 
   CurrentPolicy.fromJson(List<dynamic> json)
-      : zoneCurrentPolicies = json
-            .map((zoneJson) => ZoneCurrentPolicy.fromJson(zoneJson))
+      : regionCurrentPolicies = json
+            .map((regJson) => CurrentRegionPolicy.fromJson(regJson))
             .toList();
 }
 
-class ZoneCurrentPolicy {
-  final String timeZone;
+class CurrentRegionPolicy {
+
+  final String tollName;
   final String zone;
-  final List<RegionCurrentPrice> regions;
+  final double currentPrice;
 
-  ZoneCurrentPolicy({
-    required this.timeZone,
+  CurrentRegionPolicy({
+    required this.tollName,
     required this.zone,
-    required this.regions,
+    required this.currentPrice
   });
 
-  ZoneCurrentPolicy.fromJson(Map<String, dynamic> json)
-      : timeZone = json['timeZone'] as String,
-        zone = json['zone'] as String,
-        regions = json['regions']
-            .map<RegionCurrentPrice>(
-                (item) => RegionCurrentPrice.fromJson(item))
-            .toList();
-}
-
-class RegionCurrentPrice {
-  final String name;
-  final double price;
-
-  RegionCurrentPrice({
-    required this.name,
-    required this.price,
-  });
-
-  RegionCurrentPrice.fromJson(Map<String, dynamic> json)
-      : name = json['name'] as String,
-        price = json['price'].toDouble() as double;
+  CurrentRegionPolicy.fromJson(Map<String,dynamic> json) 
+    : tollName = json['tollName'] as String,
+    zone = json['zone'] as String,
+    currentPrice = json['currentPrice'].toDouble() as double;
+  
 }

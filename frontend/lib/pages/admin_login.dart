@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
 import '../models/models.dart';
-import '../services/post_get.dart';
+import '../services/admin_post_get.dart';
 import 'admin_page.dart';
 
 class AdminLoginPage extends StatelessWidget {
@@ -56,12 +56,13 @@ class AdminLoginPage extends StatelessWidget {
               onPressed: () async {
                 String username = usernameController.text;
                 String password = passwordController.text;
-                User? user = await loginUser(username, password);
-                // CurrentPolicy? chargePolicy = await getCurrentPolicy();
+                bool? success = await loginAdmin(username, password);
+                CurrentPolicy? chargePolicy = await getCurrentPolicy();
 
-                if (user != null) {
-                  auth.setUser(user);
-                  // auth.setCurPolicy(chargePolicy!);
+                if (success != null) {
+                  AdminUser admin = AdminUser(transactions: []);
+                  auth.setAdmin(admin);
+                  auth.setCurPolicy(chargePolicy!);
 
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AdminPage()));

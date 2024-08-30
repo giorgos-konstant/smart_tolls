@@ -12,7 +12,7 @@ class AdminTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     AdminAuthProvider auth = Provider.of<AdminAuthProvider>(context);
     getTotalTransactions(auth);
-    List<Transaction> tr = auth.admin!.transactions;
+    List<AdminTransaction> tr = auth.admin!.transactions;
 
     return Scaffold(
         appBar: AppBar(
@@ -23,7 +23,7 @@ class AdminTransactions extends StatelessWidget {
         body: ListView.builder(
           itemCount: tr.length,
           itemBuilder: (context, index) {
-            Transaction transaction = tr[index];
+            AdminTransaction transaction = tr[index];
 
             return TransactionBox(transaction: transaction);
           },
@@ -33,7 +33,7 @@ class AdminTransactions extends StatelessWidget {
 
 class TransactionBox extends StatelessWidget {
   const TransactionBox({Key? key, required this.transaction}) : super(key: key);
-  final Transaction transaction;
+  final AdminTransaction transaction;
 
   @override
   Widget build(BuildContext context) {

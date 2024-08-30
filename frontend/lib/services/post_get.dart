@@ -6,9 +6,15 @@ Future<User?> loginUser(String username, String password) async {
   final url = Uri.parse('http://localhost:5000/login/');
 
   try {
+    var reqBody = {
+      "username": username,
+      "password": password,
+    };
+
     final response = await http.post(
       url,
-      body: {'credentials': '$username,$password'},
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(reqBody),
     );
 
     if (response.statusCode == 200) {
