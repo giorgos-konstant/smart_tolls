@@ -30,3 +30,13 @@ docker run -d --name orion --link mongodb:mongodb -p 1026:1026 fiware/orion -dbU
 
 Orion Context Broker is running properly on Docker setup
 Listening on port 1026...
+
+-----------------------------------------------------------------------------------------------
+CONFIGURATION THAT WORKED WITH WSL AND YML
+
+1) Configuration for containers is on docker-compose.yml file
+2) Open a WSL terminal in the directory that contains the docker-compose.yml file
+3) Run "docker-compose up"
+4) On another terminal, run "curl http://localhost:1026/version to see that fiware is running ok
+
+NOTE: MongoDB for fiware can be accessed through MongoDBCompass with connection to http://localhost:27018

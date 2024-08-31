@@ -31,7 +31,6 @@ class AdminLoginPage extends StatelessWidget {
           children: [
             Image.asset('assets/text_logo_black_bg.png',
                 width: 200, height: 100),
-            SizedBox(height: 20),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,

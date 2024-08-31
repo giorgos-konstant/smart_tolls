@@ -1,0 +1,17 @@
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    
+  orion:
+    image: fiware/orion
+    depends_on:
+      - mongo
+    command: -dbURI mongodb://mongo:27017
+    ports:
+      - "1026:1026"
+    environment:
+      - ORION_DBHOST=mongo
+    links:
+      - mongo

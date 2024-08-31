@@ -1,0 +1,24 @@
+How to debug and run Flutter Web Apps with VS Code:
+
+1) Follow instructions from here:
+https://docs.flutter.dev/get-started/install/windows/web
+
+2) Run "flutter doctor" to make sure it finds the chrome installation
+3) Run "flutter channel" to make sure you're on "stable"
+4) If not on "stable" , run "flutter channel stable"
+5) [Optional] run flutter upgrade
+6) You can check connected devices with "flutter devices"
+(e.g. chrome for web-app)
+
+6.5) Before going to run flutter app, make sure other necessary components are running (MongoDB, docker, MQTT, fiware, backend.js)
+
+7) Debug/Run configurations are instructed in .vscode folder of the smart_tolls repo
+Go to "Run and Debug" (left toolbar in VS code) and choose:
+    > Flutter Web (HTML Rendered) for user app
+    > Flutter Web Admin for admin app
+Specifically "launch.json" contains the configurations
+
+8) Press the Green Play Button on top of the Run and Debug page
+(More instructions: https://docs.flutter.dev/platform-integration/web/building)
+
+ALSO : If prompted to run "pub get", run it, it installs necessary packages
