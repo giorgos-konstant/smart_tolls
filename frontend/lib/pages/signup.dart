@@ -26,13 +26,13 @@ class SignUpPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding:
-              EdgeInsets.only(left: 250, right: 250, top: 200, bottom: 250),
+              EdgeInsets.only(left: 250, right: 250),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset('assets/text_logo_black_bg.png',
-                  width: 500, height: 350),
+                  width: 500, height: 300),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(

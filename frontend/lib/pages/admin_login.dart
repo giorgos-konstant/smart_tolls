@@ -23,14 +23,15 @@ class AdminLoginPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(250.0),
+      body: Container(
+        height: 600,
+        padding: EdgeInsets.only(left: 250, right:250,top:100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset('assets/text_logo_black_bg.png',
-                width: 200, height: 100),
+                width: 500, height: 200),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,

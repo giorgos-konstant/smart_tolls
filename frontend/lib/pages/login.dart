@@ -21,14 +21,14 @@ class LoginPage extends StatelessWidget {
         title: Text("Log In"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 250, right: 250),
-        child: Column(
+      body: Container(
+          padding: EdgeInsets.only(right: 250,left:250),
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset('assets/text_logo_black_bg.png',
-                width: 600, height: 350),
+                width: 500, height: 200),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,
@@ -76,7 +76,7 @@ class LoginPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Don't have an account?",
+                  "Don't have an account?  ",
                   style: TextStyle(fontSize: 15),
                 ),
                 ElevatedButton(
@@ -92,7 +92,7 @@ class LoginPage extends StatelessWidget {
             // SizedBox(height: 30),
           ],
         ),
-      ),
-    );
+      )
+      );
   }
 }
