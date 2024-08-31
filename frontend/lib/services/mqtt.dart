@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_browser_client.dart';
-import 'package:smart_tolls/services/auth.dart';
+import '../services/auth.dart';
 import 'dart:convert';
 import 'package:toastification/toastification.dart';
-import 'package:smart_tolls/models/models.dart';
+import '../models/models.dart';
 
 mqttBrokerSetUp(AuthProvider auth, String clientName) async {
   try {

@@ -2,7 +2,7 @@ const mqtt = require('mqtt')
 const EventEmitter = require('events');
 const mqttClient = mqtt.connect('mqtt://localhost:1883');
 
-const tolls = ['TEI', 'Konstantinoupoleos', 'Germanou', 'Othonos Amalias'];
+const tolls = ['Tei', 'Konpoleos', 'Germanou', 'OthAma'];
 
 const messageEmitter = new EventEmitter();
 // Subscribe to all toll topics

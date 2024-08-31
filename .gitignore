@@ -46,4 +46,3 @@ app.*.map.json
 /backend/node_modules/
 /frontend/build/
 /fiware/node_modules/
-/backend/backend.js

@@ -31,6 +31,8 @@ class SignUpPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Image.asset('assets/text_logo_black_bg.png',
+                  width: 500, height: 350),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
@@ -41,7 +43,7 @@ class SignUpPage extends StatelessWidget {
               SizedBox(height: 20),
               TextField(
                 controller: passwordController,
-                obscureText: false,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'password',
                   border: OutlineInputBorder(),
@@ -50,7 +52,7 @@ class SignUpPage extends StatelessWidget {
               SizedBox(height: 20),
               TextField(
                 controller: valPasswordController,
-                obscureText: false,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Validate password',
                   border: OutlineInputBorder(),
@@ -60,7 +62,7 @@ class SignUpPage extends StatelessWidget {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  labelText: 'Email Adress',
+                  labelText: 'Email Address',
                   border: OutlineInputBorder(),
                 ),
               ),

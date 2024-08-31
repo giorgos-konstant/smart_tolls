@@ -19,7 +19,7 @@ class AdminPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('EasyToll Admin'),
+        title: Text('GridFlow Admin'),
       ),
       bottomNavigationBar:
           SizedBox(height: 100, child: _buildNavigationBar(context)),
@@ -32,11 +32,11 @@ class AdminPage extends StatelessWidget {
       case 0:
         return AdminCurrentPolicy();
       case 1:
-        return AdminDashboard();
+        return AdminMap();
       case 2:
         return AdminTransactions();
       default:
-        return AdminDashboard();
+        return AdminMap();
     }
   }
 
@@ -54,12 +54,12 @@ class AdminPage extends StatelessWidget {
           label: 'Policy',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.space_dashboard, size: 35),
-          label: 'Dashboard',
+          icon: Icon(Icons.place_outlined, size: 35),
+          label: 'Map Overview',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.analytics_rounded, size: 35),
-          label: 'Overview',
+          icon: Icon(Icons.analytics_outlined, size: 35),
+          label: 'Transactions',
         ),
       ],
     );

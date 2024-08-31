@@ -29,6 +29,8 @@ class AdminLoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.asset('assets/text_logo_black_bg.png',
+                width: 200, height: 100),
             SizedBox(height: 20),
             TextField(
               style: TextStyle(fontSize: 20),
@@ -57,12 +59,10 @@ class AdminLoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
                 bool? success = await loginAdmin(username, password);
-                CurrentPolicy? chargePolicy = await getCurrentPolicy();
 
                 if (success != null) {
                   AdminUser admin = AdminUser(transactions: []);
                   auth.setAdmin(admin);
-                  auth.setCurPolicy(chargePolicy!);
 
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AdminPage()));

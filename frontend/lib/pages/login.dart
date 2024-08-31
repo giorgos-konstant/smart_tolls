@@ -22,12 +22,13 @@ class LoginPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(250.0),
+        padding: EdgeInsets.only(left: 250, right: 250),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            Image.asset('assets/text_logo_black_bg.png',
+                width: 600, height: 350),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,

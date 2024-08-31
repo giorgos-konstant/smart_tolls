@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_tolls/models/models.dart';
-import 'package:smart_tolls/services/admin_post_get.dart';
-import 'package:smart_tolls/services/auth.dart';
+import '../models/models.dart';
+import '../services/admin_post_get.dart';
+import '../services/auth.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class AdminTransactions extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Transaction History'),
+          title: Text('Transactions Overview'),
           automaticallyImplyLeading: false,
           centerTitle: true,
         ),

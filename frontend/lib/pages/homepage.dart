@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('EasyToll'),
+        title: Text('GridFlow'),
       ),
       bottomNavigationBar:
           SizedBox(height: 100, child: _buildNavigationBar(context)),

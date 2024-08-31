@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return ToastificationWrapper(
         child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'SmartTolls',
+      title: 'GridFlow',
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(

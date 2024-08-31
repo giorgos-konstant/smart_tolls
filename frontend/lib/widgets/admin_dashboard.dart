@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_tolls/services/admin_post_get.dart';
+import '../services/admin_post_get.dart';
 import '../services/auth.dart';
 
 // ignore: must_be_immutable
-class AdminDashboard extends StatelessWidget {
-  AdminDashboard({super.key});
+class AdminMap extends StatelessWidget {
+  AdminMap({super.key});
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(38.24711982918365, 21.735133678871826);
   final String _mapStyleString = '''
@@ -52,7 +52,7 @@ class AdminDashboard extends StatelessWidget {
               Marker(
                   markerId: MarkerId('Former TEI'),
                   position: LatLng(38.219161, 21.741320),
-                  onTap: () => getTotalStatsPerToll('TEI', auth),
+                  onTap: () => getTotalStatsPerToll('Tei', auth),
                   infoWindow: InfoWindow(
                       title:
                           "Former TEI\nZone A\nCurrent Price: ${auth.total.currentPrice}\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
@@ -80,14 +80,14 @@ class AdminDashboard extends StatelessWidget {
               Marker(
                   markerId: MarkerId("Konstantinoupoleos"),
                   position: LatLng(38.255407720401685, 21.74355054644139),
-                  onTap: () => getTotalStatsPerToll('Konstantinoupoleos', auth),
+                  onTap: () => getTotalStatsPerToll('Konpoleos', auth),
                   infoWindow: InfoWindow(
                       title:
                           "Konstantinoupoleos\nZone B\nCurrent Price: ${auth.total.currentPrice}\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
               Marker(
                   markerId: MarkerId("Othonos Amalias"),
                   position: LatLng(38.24620574583648, 21.73017024635936),
-                  onTap: () => getTotalStatsPerToll('Othonos Amalias', auth),
+                  onTap: () => getTotalStatsPerToll('OthAma', auth),
                   infoWindow: InfoWindow(
                       title:
                           "Othonos Amalias\nZone B\nCurrent Price: ${auth.total.currentPrice}\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),
@@ -101,7 +101,7 @@ class AdminDashboard extends StatelessWidget {
               Marker(
                   markerId: MarkerId("Agiou Andreou"),
                   position: LatLng(38.24561592510374, 21.730846163051964),
-                  onTap: () => getTotalStatsPerToll('Agiou Andreou', auth),
+                  onTap: () => getTotalStatsPerToll('AgAndreou', auth),
                   infoWindow: InfoWindow(
                       title:
                           "Agiou Andreou\nZone B\nCurrent Price: ${auth.total.currentPrice}\nTotal Transactions: ${auth.total.totalTransactions}\nTotal Paid: ${auth.total.totalMoney} Euros")),

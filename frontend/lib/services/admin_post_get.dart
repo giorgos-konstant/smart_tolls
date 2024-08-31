@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:smart_tolls/services/auth.dart';
+import '../services/auth.dart';
 import '../models/models.dart';
 
 Future<bool?> loginAdmin(String username, String password) async {
   final url = Uri.parse('http://localhost:5000/admin/');
 
   try {
-    var reqBody = {'username': username,'password':password};
+    var reqBody = {'username': username, 'password': password};
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -33,9 +33,10 @@ Future getTotalTransactions(AdminAuthProvider auth) async {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      List<AdminTransaction> transactions = data.map<AdminTransaction>((item) => AdminTransaction.fromJson(item)).toList();
-      AdminUser updatedAdmin = AdminUser(
-          transactions: transactions);
+      List<AdminTransaction> transactions = data
+          .map<AdminTransaction>((item) => AdminTransaction.fromJson(item))
+          .toList();
+      AdminUser updatedAdmin = AdminUser(transactions: transactions);
       auth.setAdmin(updatedAdmin);
     } else {
       return null;
@@ -49,7 +50,10 @@ Future getTotalStatsPerToll(String tollName, AdminAuthProvider auth) async {
   final url = Uri.parse('http://localhost:5000/admin-map/');
 
   try {
-    var reqBody = {'region': tollName, "timestamp" : DateTime.now().toIso8601String()};
+    var reqBody = {
+      'region': tollName,
+      "timestamp": DateTime.now().toIso8601String()
+    };
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -71,14 +75,15 @@ Future getTotalStatsPerToll(String tollName, AdminAuthProvider auth) async {
   }
 }
 
-Future<CurrentPolicy?> getCurrentPolicy() async {
+Future getCurrentPolicy(AdminAuthProvider auth) async {
   final url = Uri.parse('http://localhost:5000/admin-policy/');
 
   try {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return CurrentPolicy.fromJson(data);
+      CurrentPolicy cp = CurrentPolicy.fromJson(data);
+      auth.setCurPolicy(cp);
     } else {
       return null;
     }

@@ -371,7 +371,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // DASHBOARD page load
-app.get('/dashboard', authenticateUser, async (req, res)=> { 
+app.get('/dashboard', async (req, res)=> { 
   try {
     const userWithDevice = await UserModel.findById(req.user._id).populate('device');
     console.log('userWithDevice:', userWithDevice);
@@ -500,7 +500,7 @@ app.post('/admin', async (req, res) => {
 });
 
 // ADMIN transactions page handling
-app.get('/admin-transactions', adminCheckMiddleware, async(req, res) => {
+app.get('/admin-transactions', /*adminCheckMiddleware,*/ async(req, res) => {
   try {
     // Fecth 50 last transactions
     const transactions = await TransactionModel.find().sort({timeStamp: -1}).limit(50).populate('userId').exec();
@@ -512,8 +512,8 @@ app.get('/admin-transactions', adminCheckMiddleware, async(req, res) => {
 });
 
 // ADMIN map page handling
-app.get('/admin-map', adminCheckMiddleware, async (req, res)=> {
-  const {region, timestamp} = req.query;
+app.post('/admin-map', /*adminCheckMiddleware,*/ async (req, res)=> {
+  const {region, timestamp} = req.body;
   try {
     // Find the toll by region
     const toll = await TollModel.findOne({region}).exec();
@@ -552,7 +552,7 @@ app.get('/admin-map', adminCheckMiddleware, async (req, res)=> {
   }
 });
 
-app.get('/admin-policy', adminCheckMiddleware, async(req, res) => {
+app.get('/admin-policy', /*adminCheckMiddleware,*/ async(req, res) => {
   try {
     const tolls = await TollModel.find();
     const tollsWithPrices = [];
@@ -588,14 +588,15 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
           console.log('Device not found');
       }
       // Find the user associated with the device
-      // const user = await UserModel.findById(device.user).exec();
-      // if (!user) {
-      //   console.log('User not found');
-      // }
+      const user = await UserModel.findById(device.user).exec();
+      if (!user) {
+        console.log('User not found');
+      }
       // SHOULD FIND TOLL BY TOLL_NAME
       // Find the toll by toll_id
       //const toll = await TollModel.findById(toll_id).exec();
       const toll = await TollModel.findOne({region: tollName}).exec();
+      console.log("FOUND TOLL:",toll)
       if(!toll) {
         console.log('Toll not found');
       }
@@ -607,19 +608,19 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
 
       // const {zone, region, policy} = toll;
       const {hours} = extractTimezone(timestamp);
-      const regionPolicy = policy.regions.find((r)=> r.name === region);
+      const regionPolicy = policy.regions.find((r)=> r.name === tollName);
       const chargeAmount = calculateChargeAmount(regionPolicy, hours);
 
       // Ensure user has sufficient balance
-      if (user.balance < chargeAmount){
-          return res.status(400).send({message: 'Insufficient balance'});
-      }
+      // if (user.balance < chargeAmount){
+      //     return res.status(400).send({message: 'Insufficient balance'});
+      // }
 
       // Create and save the new transaction
       const newTransaction = new TransactionModel({
           userId: user._id,
-          zone,
-          tollName: toll.name,
+          zone: toll.zone,
+          tollName: tollName,
           timeStamp: timestamp,
           chargeAmount,
       });
@@ -643,7 +644,7 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
 
       // Publish the data to the MQTT topic
       await publishUpdate(mqttData);
-      res.send({message:'Transaction processed', transaction: savedTransaction, balance: user.balance});
+      // res.send({message:'Transaction processed', transaction: savedTransaction, balance: user.balance});
   } catch (error) {
       console.error('Error processing toll payment:', error);
     }
