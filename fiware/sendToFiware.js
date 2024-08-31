@@ -106,10 +106,11 @@ async function sendData() {
         const tolls = await fetchTolls();
         for (const toll of tolls) {
             //const transactions = await fetchTransactionsForToll(toll.region); 
-            const entities = convertToFiwareEntity(toll);
-            for (const entity of entities) {
-                await sendToFiware(entity);
-            }
+            const entity = convertToFiwareEntity(toll);
+            await sendToFiware(entity);
+            // for (const entity of entities) {
+            //     await sendToFiware(entity);
+            // }
         }
     } catch (error) {
         console.error('Error processing and sending data:', error);
