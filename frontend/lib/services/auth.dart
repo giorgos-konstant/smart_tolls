@@ -19,6 +19,15 @@ class AdminAuthProvider extends ChangeNotifier {
   CurrentPolicy _currentPolicy = CurrentPolicy(regionCurrentPolicies: []);
   CurrentPolicy get currentPolicy => _currentPolicy;
 
+  // ignore: prefer_final_fields
+  String _sessionToken = '';
+  String get sessionToken => _sessionToken;
+
+  void setSessionToken(String jwt){
+    _sessionToken = jwt;
+    notifyListeners();
+  }
+
   void setAdmin(AdminUser newAdmin) {
     _admin = newAdmin;
     notifyListeners();

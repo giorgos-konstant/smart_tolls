@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const axios = require('axios'); // Import axios
 
 // Establish connection to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/iot_db', {
+mongoose.connect('mongodb://localhost:27018/'/*, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
+}*/)
 .then(() => {
     console.log('Connected to MongoDB');
 })
@@ -20,6 +20,7 @@ const { TollModel, TransactionModel } = require('../backend/backend.js');
 async function fetchTolls() {
     try {
         const tolls = await TollModel.find().exec();
+        console.log(tolls);
         return tolls;
     } catch(error) {
         console.error('Error fetching tolls:', error);
@@ -44,10 +45,6 @@ function convertToFiwareEntity(toll) {
     const tollEntity = {
         id: `urn:ngsi-ld:Toll:${toll._id}`,
         type: "Toll",
-        // name: {
-        //     type: "Property",
-        //     value: toll.name
-        // },
         region: {
             type: "Property",
             value: toll.region
@@ -57,6 +54,7 @@ function convertToFiwareEntity(toll) {
             value: toll.zone
         }
     };
+    return tollEntity;
 }
     // Convert transactions to FIWARE entities
 //     const transactionEntities = (transactions || []).map(tx => ({
@@ -90,8 +88,8 @@ async function sendToFiware(entity) {
         const response = await axios.post('http://localhost:1026/v2/entities', entity, {
             headers: {
                 'Content-Type': 'application/json',
-                'Fiware-Service': 'openiot',
-                'Fiware-ServicePath': '/'
+                // 'Fiware-Service': 'openiot',
+                // 'Fiware-ServicePath': '/'
             }
         });
         console.log('Entity created successfully:', response.data);
@@ -106,12 +104,11 @@ async function sendData() {
         const tolls = await fetchTolls();
         for (const toll of tolls) {
             //const transactions = await fetchTransactionsForToll(toll.region); 
-            const entities = convertToFiwareEntity(toll);
-            for (const entity of entities) {
-                await sendToFiware(entity);
+            const entity = convertToFiwareEntity(toll);
+            await sendToFiware(entity);
             }
         }
-    } catch (error) {
+    catch (error) {
         console.error('Error processing and sending data:', error);
     }
 }

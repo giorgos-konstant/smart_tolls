@@ -58,7 +58,7 @@ class AdminLoginPage extends StatelessWidget {
               onPressed: () async {
                 String username = usernameController.text;
                 String password = passwordController.text;
-                bool? success = await loginAdmin(username, password);
+                bool? success = await loginAdmin(auth,username, password);
 
                 if (success != null) {
                   AdminUser admin = AdminUser(transactions: []);

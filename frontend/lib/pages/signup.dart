@@ -105,7 +105,7 @@ class SignUpPage extends StatelessWidget {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => HomePage()));
                     } else {
-                      auth.loginMsg('Sign Up failed. Please the credentials.');
+                      auth.loginMsg('Sign Up failed. Please check the credentials.');
                     }
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 20))),
