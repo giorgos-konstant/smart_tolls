@@ -1,5 +1,3 @@
-// TO-DO
-// use role field in User Schema and token-based authentification (session for admin)
 
 const express = require('express');
 const path = require('path');
@@ -11,12 +9,27 @@ const messageEmitter = require('./backend_subscribe');
 const app = express();
 const port = 5000;
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+const { subtle } = require('crypto');
+// Secret key to sign the JWT when it is created
+const SECRET_KEY = '123456789';
+
 // Middleware to handle static files
 app.use(express.static(path.join(__dirname, 'web')));
 
 // Middleware to parse JSON requests
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
+
+// Hash passwords
+userSchema. pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
+});
 
 // Middleware to check for admin rights
 const adminCheckMiddleware = (req, res, next) => {
@@ -29,6 +42,33 @@ const adminCheckMiddleware = (req, res, next) => {
     });
   }
 };
+
+// Middleware to check authentication
+const authMiddleware = (roles = []) => {
+  return (req, res, next) => {
+    // Extract authorization header with token
+    const authHeader = req.headers['authorization'];
+    token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      res.status(403).json({message: 'No token received'});
+    }
+    // Check if jwt was signed with the correct secret key
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({message: 'Failed to authenticate token'});
+      }
+      req.user = decoded;
+
+      // Check user role
+      if (roles.length && !roles.includes(req.user.role)) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      next();
+    });
+  };
+};
+
 
 // Enable CORS (Cross-Origin Resource Sharing)
 app.use((req, res, next) => {
@@ -299,19 +339,15 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await UserModel.findOne({username, password});
-    if (user) {
-        // find transactions related to the user
-        // const transactions = await TransactionModel.find({userId});
-        // combine user info and transactions
-        // const userData = {
-        //     user,
-        //     transactions
-        // };
+    if (user && bcrypt.compare(password, user.password)) {
+      //Generate token
+      const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY, {expiresIn: '1h'});
       const userComplete = await UserModel.findById(user._id).populate('device').populate('transactions');
       // JSON with logged in user data with device
       console.log(userComplete);
       // JSON with logged in user data with transactions
-      res.json(userComplete);
+      res.json({userComplete, 
+        token: token});
       // send logged in user data to DASHBOARD
       //res.render('dashboard', {user: userWithDevice});
     } else {
@@ -340,9 +376,11 @@ app.post('/signup', async (req, res) => {
     return res.send('Password and password check do not match');
   }
   try {
+    // Hash Password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = new UserModel({
       username: username,
-      password: password,
+      password: hashedPassword,
       email: email,
       licensePlate: licensePlate,
       balance: 10,
@@ -358,10 +396,14 @@ app.post('/signup', async (req, res) => {
     await newDevice.save();
     savedUser.device = newDevice._id;
     await savedUser.save();
+    // Generate token
+    const token = jwt.sign({id: savedUser._id, role: savedUser.role}, SECRET_KEY, {expiresIn: '1h'});
     const userWithDevice = await UserModel.findById(savedUser._id).populate('device');
     // JSON with signed-up user data
     console.log(userWithDevice);
-    res.json(userWithDevice);
+    res.json({userWithDevice,
+      token: token}
+    );
     // send signed-up user data to DASHBOARD
     //res.render('dashboard', {user: userWithDevice});
   } catch (error) {
@@ -371,7 +413,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // DASHBOARD page load
-app.get('/dashboard', async (req, res)=> { 
+app.get('/dashboard', authMiddleware(['user']), async (req, res)=> { 
   try {
     const userWithDevice = await UserModel.findById(req.user._id).populate('device');
     console.log('userWithDevice:', userWithDevice);
@@ -385,7 +427,7 @@ app.get('/dashboard', async (req, res)=> {
 
 
 // CHARGE-POLICY page load
-app.get('/charge-policy', async (req, res) => {
+app.get('/charge-policy', authMiddleware(['user']), async (req, res) => {
   try {
     const chargingPolicies = await ChargingPolicyModel.find();
     console.log('Charging Policies:', chargingPolicies);
@@ -404,7 +446,7 @@ app.get('/charge-policy', async (req, res) => {
 });
 
 // HISTORY page load
-app.get('/history', async (req, res) => {
+app.get('/history', authMiddleware(['user']), async (req, res) => {
   // Prints on history all Toll instances of database
   // along with the prices that correspond to each of them
   // for each time period
@@ -441,7 +483,7 @@ app.get('/history', async (req, res) => {
 
 
 // ADD-MONEY for authenticated user
-app.post('/add-money', async(req, res) => {
+app.post('/add-money', authMiddleware(['user']), async(req, res) => {
   const userId = req.body.userId;
     // Validate request data
     if (!userId || !amount || isNaN(amount)) {
@@ -483,13 +525,15 @@ app.post('/add-money', async(req, res) => {
 
 // ADMIN LOGIN
 // TO-DO : Proper authorization
-app.post('/admin', async (req, res) => {
+app.post('/admin', authMiddleware(['admin']), async (req, res) => {
   const {username, password} = req.body;
   try {
     const user = await UserModel.findOne({username, password});
     if (user && user.role === 'admin') {
+      // Generate and return token
+      const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY, {expiresIn: '1h'});
       // Ideally session handling needed
-      res.json({success: true, message: 'Admin logged in'});
+      res.json({success: true, message: 'Admin logged in', token});
     } else {
       res.status(401).json({success: false, message: 'Invalid admin credentials'});
     }
@@ -500,7 +544,7 @@ app.post('/admin', async (req, res) => {
 });
 
 // ADMIN transactions page handling
-app.get('/admin-transactions', /*adminCheckMiddleware,*/ async(req, res) => {
+app.get('/admin-transactions', authMiddleware(['admin']), async(req, res) => {
   try {
     // Fecth 50 last transactions
     const transactions = await TransactionModel.find().sort({timeStamp: -1}).limit(50).populate('userId').exec();
@@ -512,7 +556,7 @@ app.get('/admin-transactions', /*adminCheckMiddleware,*/ async(req, res) => {
 });
 
 // ADMIN map page handling
-app.post('/admin-map', /*adminCheckMiddleware,*/ async (req, res)=> {
+app.post('/admin-map', authMiddleware(['admin']), async (req, res)=> {
   const {region, timestamp} = req.body;
   try {
     // Find the toll by region
@@ -552,7 +596,7 @@ app.post('/admin-map', /*adminCheckMiddleware,*/ async (req, res)=> {
   }
 });
 
-app.get('/admin-policy', /*adminCheckMiddleware,*/ async(req, res) => {
+app.get('/admin-policy', authMiddleware(['admin']), async(req, res) => {
   try {
     const tolls = await TollModel.find();
     const tollsWithPrices = [];
