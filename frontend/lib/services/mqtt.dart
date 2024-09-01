@@ -8,10 +8,10 @@ import '../models/models.dart';
 
 mqttBrokerSetUp(AuthProvider auth, String clientName) async {
   try {
-    var client = MqttBrowserClient('ws://localhost', clientName);
+    var client = MqttBrowserClient('ws://localhost:9001', clientName);
     client.websocketProtocols = ['mqtt'];
     client.port = 9001;
-    client.keepAlivePeriod = 60;
+    client.keepAlivePeriod = 1000;
     client.logging(on: false);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
@@ -41,51 +41,40 @@ mqttBrokerSetUp(AuthProvider auth, String clientName) async {
       final decoded =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
       print("!!!!Received message $decoded from topic: $topic");
-      if (decoded != 'failed') {
-        final Map<String, dynamic> data = jsonDecode(decoded);
-        double updatedBalance = data['balance'] as double;
-        String userId = data['transaction']['id'] as String;
-        String zone = data['transaction']['zone'] as String;
-        String tollName = data['transaction']['tollName'] as String;
-        String timeStamp = data['transaction']['timeStamp'] as String;
-        double chargeAmount =
-            data['transaction']['chargeAmount'].toDouble() as double;
-        Transaction newTransaction = Transaction(
-            userId: userId,
-            zone: zone,
-            tollName: tollName,
-            timeStamp: timeStamp,
-            chargeAmount: chargeAmount);
-        auth.user!.transactions.add(newTransaction);
-        User updatedUser = User(
-            balance: updatedBalance,
-            userId: auth.user!.userId,
-            username: auth.user!.username,
-            email: auth.user!.email,
-            licensePlate: auth.user!.licensePlate,
-            deviceId: auth.user!.deviceId,
-            transactions: auth.user!.transactions);
+      final Map<String, dynamic> data = jsonDecode(decoded);
+      double updatedBalance = data['balance'] as double;
+      String userId = data['transaction']['id'] as String;
+      String zone = data['transaction']['zone'] as String;
+      String tollName = data['transaction']['tollName'] as String;
+      String timeStamp = data['transaction']['timeStamp'] as String;
+      double chargeAmount =
+          data['transaction']['chargeAmount'].toDouble() as double;
+      Transaction newTransaction = Transaction(
+          userId: userId,
+          zone: zone,
+          tollName: tollName,
+          timeStamp: timeStamp,
+          chargeAmount: chargeAmount);
+      auth.user!.transactions.add(newTransaction);
+      User updatedUser = User(
+          balance: updatedBalance,
+          userId: auth.user!.userId,
+          username: auth.user!.username,
+          email: auth.user!.email,
+          licensePlate: auth.user!.licensePlate,
+          deviceId: auth.user!.deviceId,
+          transactions: auth.user!.transactions);
 
-        toastification.show(
-            title: Text('Successfull Transaction'),
-            description: Text("Station: $tollName"),
-            alignment: Alignment.topCenter,
-            autoCloseDuration: Duration(seconds: 3),
-            type: ToastificationType.success,
-            style: ToastificationStyle.fillColored,
-            primaryColor: Colors.green);
+      toastification.show(
+          title: Text('Successfull Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+          description: Text("Station: $tollName",style: TextStyle(fontSize: 15,fontWeight:FontWeight.bold)),
+          alignment: Alignment.topCenter,
+          autoCloseDuration: Duration(seconds: 3),
+          type: ToastificationType.success,
+          style: ToastificationStyle.fillColored,
+          primaryColor: Colors.green);
 
-        auth.setUser(updatedUser);
-      } else {
-        toastification.show(
-            title: Text("Transaction Failed"),
-            alignment: Alignment.topCenter,
-            autoCloseDuration: Duration(seconds: 3),
-            type: ToastificationType.error,
-            style: ToastificationStyle.fillColored,
-            primaryColor: Colors.red);
-      }
-      client.unsubscribe('user/updates');
+      auth.setUser(updatedUser);
     });
   } catch (e) {
     print("Exception $e");

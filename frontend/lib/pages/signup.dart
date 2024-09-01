@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
 import '../models/models.dart';
+import '../services/mqtt.dart';
 import '../services/post_get.dart';
 import 'homepage.dart';
 
@@ -96,11 +97,12 @@ class SignUpPage extends StatelessWidget {
                     String licensePlate = licensePlateController.text;
                     String deviceId = deviceIdController.text;
 
-                    User? user = await signUpUser(username, password, valPwd,
+                    User? user = await signUpUser(auth,username, password, valPwd,
                         email, licensePlate, deviceId);
                     auth.setUser(user!);
-                    ChargePolicy? chargePolicy = await getPolicy();
+                    ChargePolicy? chargePolicy = await getPolicy(auth);
                     auth.setChargePolicy(chargePolicy!);
+                    mqttBrokerSetUp(auth, 'subscribe-1000');
                     if (user != null) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => HomePage()));

@@ -33,7 +33,7 @@ class Dashboard extends StatelessWidget {
                 onPressed: () async {
                   double? amount = double.tryParse(amountController.text);
                   double? updatedBalance =
-                      await updateBalance(amount as double, auth.user!.userId);
+                      await updateBalance(auth,amount as double, auth.user!.userId);
                   User updatedUser = User(
                       balance: updatedBalance as double,
                       userId: auth.user!.userId,
@@ -99,7 +99,7 @@ class Dashboard extends StatelessWidget {
                       onPressed: () async {
                         double? amount = await _showAddBalanceDialog(context);
                         if (amount != null) {
-                          await updateBalance(amount, auth.user!.userId);
+                          await updateBalance(auth, amount, auth.user!.userId);
                         }
                       },
                       icon: Icon(Icons.add, size: 50),

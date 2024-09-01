@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
-import '../services/mqtt.dart';
 import '../widgets/dashboard.dart';
 import '../widgets/policy.dart';
 import '../widgets/history.dart';
@@ -9,12 +8,12 @@ import '../widgets/history.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  final String clientName = 'subscribe-${1000}}';
+
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
-    String clientName = 'subscribe-${1000}}';
-    mqttBrokerSetUp(auth, clientName);
 
     return Scaffold(
       appBar: AppBar(

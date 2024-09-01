@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth.dart';
 import '../models/models.dart';
+import '../services/mqtt.dart';
 import '../services/post_get.dart';
 import 'homepage.dart';
 import 'signup.dart';
@@ -22,13 +23,15 @@ class LoginPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
-          padding: EdgeInsets.only(right: 250,left:250),
+          height: 700,
+          padding: EdgeInsets.only(right: 250,left:250,top:50),
           child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset('assets/text_logo_black_bg.png',
                 width: 500, height: 200),
+            SizedBox(height: 30),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,
@@ -55,13 +58,13 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 String username = usernameController.text;
                 String password = passwordController.text;
-                User? user = await loginUser(username, password);
-                ChargePolicy? chargePolicy = await getPolicy();
+                User? user = await loginUser(auth,username, password);
+                ChargePolicy? chargePolicy = await getPolicy(auth);
 
                 if (user != null) {
                   auth.setUser(user);
                   auth.setChargePolicy(chargePolicy!);
-
+                  mqttBrokerSetUp(auth, 'subscribe-1000');
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
                 } else {

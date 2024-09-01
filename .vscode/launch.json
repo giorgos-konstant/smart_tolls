@@ -34,7 +34,9 @@
       "program": "frontend/lib/admin_app.dart",
       "args": [
         "--web-renderer",
-        "html"
+        "html",
+        // "--web-browser-flag",
+        // "--disable-web-security"
       ],
       "deviceId": "chrome"
     },

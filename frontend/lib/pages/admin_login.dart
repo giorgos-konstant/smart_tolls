@@ -24,14 +24,15 @@ class AdminLoginPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
-        height: 600,
-        padding: EdgeInsets.only(left: 250, right:250,top:100),
+        height: 700,
+        padding: EdgeInsets.only(left: 250, right:250),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset('assets/text_logo_black_bg.png',
                 width: 500, height: 200),
+            SizedBox(height: 50),
             TextField(
               style: TextStyle(fontSize: 20),
               controller: usernameController,
@@ -59,6 +60,7 @@ class AdminLoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
                 bool? success = await loginAdmin(auth,username, password);
+                await getCurrentPolicy(auth);
 
                 if (success != null) {
                   AdminUser admin = AdminUser(transactions: []);

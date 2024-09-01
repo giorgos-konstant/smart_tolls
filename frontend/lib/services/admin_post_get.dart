@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../services/auth.dart';
 import '../models/models.dart';
@@ -17,8 +18,8 @@ Future<bool?> loginAdmin(AdminAuthProvider auth, username, String password) asyn
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
       bool success = data['success'];
-      // String jwtToken = data['jwtToken'];
-      // auth.setSessionToken(jwtToken);
+      String jwtToken = data['token'];
+      auth.setSessionToken(jwtToken);
       return success;
     } else {
       return null;
@@ -29,10 +30,10 @@ Future<bool?> loginAdmin(AdminAuthProvider auth, username, String password) asyn
 }
 
 Future getTotalTransactions(AdminAuthProvider auth) async {
-  final url = Uri.parse('http://fiware:1026/v2/entities');
+  final url = Uri.parse('http://localhost:1026/v2/entities');
 
   try {
-    final response = await http.get(url,headers: {'Accept': 'application/json'});
+    final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       List<AdminTransaction> transactions = data
@@ -59,7 +60,7 @@ Future getTotalStatsPerToll(String tollName, AdminAuthProvider auth) async {
     };
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json','Authorization' : 'Bearer ${auth.sessionToken}'},
+      headers: {'Content-Type': 'application/json','authorization' : 'Bearer ${auth.sessionToken}'},
       body: jsonEncode(reqBody),
     );
 
@@ -82,13 +83,9 @@ Future getCurrentPolicy(AdminAuthProvider auth) async {
   final url = Uri.parse('http://localhost:5000/admin-policy/');
 
   try {
-    var reqBody = {
-      'jwtToken' : auth.sessionToken,
-    };
-    final response = await http.post(
+    final response = await http.get(
       url,
-      headers: {'Content-Type': 'application/json','Authorization' : 'Bearer ${auth.sessionToken}'},
-      body: jsonEncode(reqBody),
+      headers: {HttpHeaders.authorizationHeader: 'Bearer ${auth.sessionToken}'},
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -98,6 +95,7 @@ Future getCurrentPolicy(AdminAuthProvider auth) async {
       return null;
     }
   } catch (error) {
+    print(error);
     return null;
   }
 }

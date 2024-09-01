@@ -300,7 +300,7 @@ class Policy extends StatelessWidget {
   }
 
   int getCurrentZone(DateTime now) {
-    int curZone = 0;
+    int curZone = 4;
     int zone1Start = 8;
     int zone1End = 12;
     int zone2End = 17;
@@ -312,7 +312,7 @@ class Policy extends StatelessWidget {
       curZone = 0;
     } else if (curHour >= zone1End && curHour < zone2End) {
       curZone = 1;
-    } else if (curHour >= zone1End && curHour < zone2End) {
+    } else if (curHour >= zone2End && curHour < zone3End) {
       curZone = 2;
     } else if (curHour >= zone3End && curHour < zone4End) {
       curZone = 3;

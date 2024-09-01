@@ -30,26 +30,26 @@ def publish(client,fail):
     
     i=0
     try:
-        while i<5:
+        while i<1:
             time.sleep(random.randint(1,3))
-            ind = random.randint(0,len(topics)-1)
+            topic = random.choice(topics)
             now = datetime.now()
             random_hour = random.randint(1,23)
             now = now.replace(hour=random_hour)
             json_msg = {
-                "deviceId" : "45",
+                "deviceId" : "342",
                 "timestamp" : now.isoformat()
             }
             if fail:
-                msg = 'failed'
+                msg = "failed"
             else:
                 msg = json.dumps(json_msg)
-            result = client.publish(topics[ind],msg)
+            result = client.publish(topic,msg)
             status = result[0]
             if status == 0:
-                print(f"Send {msg} to topic {topics[ind]}")
+                print(f"Send {msg} to topic {topic}")
             else:
-                print(f"Failed to send message to topic {topics[ind]}")
+                print(f"Failed to send message to topic {topic}")
             i+=1
     finally:
         client.disconnect()

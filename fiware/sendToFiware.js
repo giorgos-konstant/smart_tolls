@@ -1,26 +1,26 @@
 const mongoose = require('mongoose');
 const axios = require('axios'); // Import axios
 
+// Retrieve needed models
+const { TollModel, TransactionModel } = require('../backend/backend.js');
+
 // Establish connection to MongoDB
 mongoose.connect('mongodb://localhost:27018/'/*, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }*/)
 .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to Orion MongoDB');
 })
 .catch(err => {
     console.error('Error connecting to MongoDB:', err);
 });
 
-// Retrieve needed models
-const { TollModel, TransactionModel } = require('../backend/backend.js');
-
 // Retrieve all tolls
 async function fetchTolls() {
     try {
         const tolls = await TollModel.find().exec();
-        console.log(tolls);
+        console.log("FOUND TOLLS",tolls);
         return tolls;
     } catch(error) {
         console.error('Error fetching tolls:', error);
@@ -98,9 +98,13 @@ async function sendToFiware(entity) {
     }
 }
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve,ms));
+}
 // Process and send data to FIWARE
 async function sendData() {
     try {
+        await delay(2000);
         const tolls = await fetchTolls();
         for (const toll of tolls) {
             //const transactions = await fetchTransactionsForToll(toll.region); 

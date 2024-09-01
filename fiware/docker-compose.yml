@@ -8,7 +8,9 @@ services:
     image: fiware/orion
     depends_on:
       - mongo
-    command: -dbURI mongodb://mongo:27017
+    command: 
+      -dbURI mongodb://mongo:27017 
+      -corsOrigin __ALL
     ports:
       - "1026:1026"
     environment:

@@ -23,11 +23,11 @@ app.use(express.static(path.join(__dirname, 'web')));
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
 
-// Hash passwords
-userSchema. pre('save', async function(next) {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, saltRounds);
-  }
+// Enable CORS (Cross-Origin Resource Sharing)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept');
   next();
 });
 
@@ -69,15 +69,6 @@ const authMiddleware = (roles = []) => {
   };
 };
 
-
-// Enable CORS (Cross-Origin Resource Sharing)
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
 // Connect to local database
 mongoose.connect('mongodb://127.0.0.1:27017/iot_db');
 const db = mongoose.connection;
@@ -107,6 +98,14 @@ const userSchema = new mongoose.Schema({
   },
   transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'}],
   role: {type:String, enum:['user', 'admin'], default: 'user'}
+});
+
+// Hash passwords
+userSchema. pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
 });
 
 // Device Schema
@@ -334,12 +333,12 @@ app.get('/login', (req, res) => {
 
 // Handle login page received values
 app.post('/login', async (req, res) => {
-  const credentials = req.body.credentials;
-  const [username, password] = credentials.split(',');
+  const {username, password} = req.body;
 
   try {
     const user = await UserModel.findOne({username, password});
-    if (user && bcrypt.compare(password, user.password)) {
+    console.log(username,password,user.password)
+    if (user && bcrypt.compare(password,user.password)) {
       //Generate token
       const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY, {expiresIn: '1h'});
       const userComplete = await UserModel.findById(user._id).populate('device').populate('transactions');
@@ -485,12 +484,12 @@ app.get('/history', authMiddleware(['user']), async (req, res) => {
 // ADD-MONEY for authenticated user
 app.post('/add-money', authMiddleware(['user']), async(req, res) => {
   const userId = req.body.userId;
+  const amountToAdd = parseFloat(req.body.amount);
     // Validate request data
-    if (!userId || !amount || isNaN(amount)) {
+    if (!userId || !amountToAdd || isNaN(amountToAdd)) {
         return res.status(400).send('Invalid request data.')
     }
-  //const userId = req.body.userId;
-  const amountToAdd = parseFloat(req.body.amount);
+  
   try {
     //console.log(userId);
     const user = await UserModel.findById(userId).populate('device');
@@ -525,7 +524,7 @@ app.post('/add-money', authMiddleware(['user']), async(req, res) => {
 
 // ADMIN LOGIN
 // TO-DO : Proper authorization
-app.post('/admin', authMiddleware(['admin']), async (req, res) => {
+app.post('/admin', async (req, res) => {
   const {username, password} = req.body;
   try {
     const user = await UserModel.findOne({username, password});
@@ -533,7 +532,7 @@ app.post('/admin', authMiddleware(['admin']), async (req, res) => {
       // Generate and return token
       const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY, {expiresIn: '1h'});
       // Ideally session handling needed
-      res.json({success: true, message: 'Admin logged in', token});
+      res.json({success: true, message: 'Admin logged in', token : token});
     } else {
       res.status(401).json({success: false, message: 'Invalid admin credentials'});
     }
@@ -591,7 +590,7 @@ app.post('/admin-map', authMiddleware(['admin']), async (req, res)=> {
       currentPrice
     });
   } catch (error) {
-    console.error('Error fetching toll data for admin: ', error);
+    console.error('Error fetching toll data for admi n: ', error);
     res.status(500).send('Internal Server Error');
   }
 });

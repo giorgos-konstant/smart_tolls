@@ -72,6 +72,14 @@ class AuthProvider extends ChangeNotifier {
   String _loginFailMsg = '';
   String get loginFailMsg => _loginFailMsg;
 
+  String _sessionToken = '';
+  String get sessionToken => _sessionToken;
+
+  void setSessionToken(String jwt){
+    _sessionToken = jwt;
+    notifyListeners();
+  }
+
   void setUser(User newUser) {
     _user = newUser;
     notifyListeners();
