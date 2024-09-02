@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const axios = require('axios'); // Import axios
 
 // Retrieve needed models
-const { TollModel, TransactionModel } = require('../backend/backend.js');
+// const { TollModel, TransactionModel } = require('../backend/backend.js');
 
 // Establish connection to MongoDB
 mongoose.connect('mongodb://localhost:27018/'/*, {
@@ -181,7 +181,7 @@ async function fetchUsers() {
 const subscription = {
     description: "Notify changes of transactions related to users",
     subject: {
-        entites: [
+        entities: [
             { idPattern: "urn:ngsi-ld:Transaction:.*", type: "Transaction"}
         ],
         condition: {
@@ -199,15 +199,15 @@ const subscription = {
 };
 
 axios.post('http://localhost:1026/v2/subscriptions', subscription, {
-    headers: {
-        'Content-Type': 'application/json',
-        'Fiware-Service': 'openiot',
-        'Fiware-ServicePath': '/'
-    }
+    // headers: {
+        // 'Accept': 'application/json',
+        // 'Fiware-Service': 'openiot',
+        // 'Fiware-ServicePath': '/'
+    // }
 }).then(response => {
     console.log('Susbcription created successfully:', response.data);
 }).catch(error => {
-    console.error("Error creating subscription: ", error.reponse ? error.reponse.data : error.message);
+    console.error("Error creating subscription: ", error.response ? error.response.data : error.message);
 });
 
 

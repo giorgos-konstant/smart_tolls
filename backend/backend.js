@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const axios = require('axios');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const {publishUpdate} = require('./backend_publish');       // import publishUpdate function
@@ -177,8 +178,8 @@ const insertTransactions = async () => {
     await TransactionModel.deleteMany();
 
     // Fetch exisitng users
-    const user1 = await UserModel.findById('6668b87f58db22b01d7f56e8');
-    const user2 = await UserModel.findById('66afe544addb08d9a4b0f582');
+    const user1 = await UserModel.findById('65c610dd8c15a68dca123ac2');
+    const user2 = await UserModel.findById('66d16b7155e8aee11181f747');
 
     // if (user1 || user2) {
     //   throw new Error('User not found');
@@ -191,14 +192,14 @@ const insertTransactions = async () => {
     // Sample transactions for user (user)
     const user1Transactions = [
       {
-        userId: '6668b87f58db22b01d7f56e8',        // userId       
+        userId: '65c610dd8c15a68dca123ac2',        // userId       
         zone : 'Zone A',
         tollName : 'Akti Dymaion',
         timeStamp : new Date(),
         chargeAmount : 10,
       },
       {
-        userId: '6668b87f58db22b01d7f56e8',
+        userId: '65c610dd8c15a68dca123ac2',
         zone : 'Zone B',
         tollName : 'Konpoleos',
         timeStamp : new Date(),
@@ -209,14 +210,14 @@ const insertTransactions = async () => {
     // Sample transactions for user (newuser123)
     const user2Transactions = [
       {
-        userId: '66afe544addb08d9a4b0f582',
+        userId: '66d16b7155e8aee11181f747',
         zone : 'Zone A',
         tollName : 'Perivola',
         timeStamp: new Date(),
         chargeAmount : 5,
       },
       {
-        userId: '66afe544addb08d9a4b0f582',
+        userId: '66d16b7155e8aee11181f747',
         zone : 'Zone B',
         tollName : 'Rio',
         timeStamp : new Date(),
@@ -587,7 +588,6 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
       console.log(tollName,deviceId,timestamp)
       // Find the device by device_id
       const device = await DeviceModel.findOne({deviceId: deviceId}).exec();
-      console.log(device)
       if (!device) {
           console.log('Device not found');
       }
@@ -628,16 +628,20 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
           chargeAmount,
       });
 
-      // New Transaction data sent to FIWARE
-      const transactionEntity = transactionToFiwareEntity(transaction);
-      await sendToFiware(transactionEntity);
+      
+      const tollEntity = tollToFiwareEntity(toll);
 
       // Update User and Toll in FIWARE
-      const userEntity = userToFiwareEntity(user);
+      const userEntity = userToFiwareEntity(user,device);
+
+      await sendToFiware(tollEntity);
       await sendToFiware(userEntity);
 
-      const tollEntity = tollToFiwareEntity(toll);
-      await sendToFiware(tollEntity);
+      // New Transaction data sent to FIWARE
+      const transactionEntity = transactionToFiwareEntity(newTransaction,userEntity,tollEntity);      
+      
+      // Send entities to FIWARE
+      await sendToFiware(transactionEntity);
 
       // Save data of new transaction in MongoDB
       const savedTransaction = await newTransaction.save();
@@ -691,9 +695,9 @@ function tollToFiwareEntity(toll) {
 
 
 // Convert User to FIWARE Entity
-function userToFiwareEntity(user) {
-    return {
-        id: `urn:ngsi-ld:Toll:${user._id}`,
+function userToFiwareEntity(user,device) {
+    const userEntity = {
+        id: `urn:ngsi-ld:User:${user._id}`,
         type: "User",
         username: {
             type: "Property", 
@@ -717,36 +721,40 @@ function userToFiwareEntity(user) {
         },
         deviceId: {
             type: "Property",
-            value: user.device ? user.device.deviceId: null
+            value: device ? device.deviceId: null
         },
-        transactions: {
-            type: "Relationship",
-            object: user.transactions.map(txId => `urn:ngsi-ld:tRANSACTION:${txId}`)
-        }
+        // transactions: {
+        //     type: "Relationship",
+        //     object: user.transactions.map(txId => `urn:ngsi-ld:Transaction:${txId}`)
+        // }
     };
+    // console.log('USER ENTITY: ',userEntity);
+    return userEntity;
   }
   
   // Convert Transaction to FIWARE Entity
-  function transactionToFiwareEntity(transaction) {
-    return {
-    id: `urn:ngsi-ld:Transaction:${transactionDocument._id}`,
+  function transactionToFiwareEntity(transaction,user,toll) {
+    const transactionEntity = {
+    id: `urn:ngsi-ld:Transaction:${transaction._id}`,
     type: "Transaction",
     amount: {
         type: "Property",
-        value: transactionDocument.amount
+        value: transaction.chargeAmount
     },
     timestamp: {
         type: "Property",
-        value: transactionDocument.timestamp },
+        value: transaction.timeStamp },
     user: {
         type: "Relationship",
-        object: `urn:ngsi-ld:User:${transaction.user._id}`
+        object: `urn:ngsi-ld:User:${user.id}`
     },
     toll: {
         type: "Relationship",
-        object: `urn:ngsi-ld:Toll:${transaction.toll._id}`
+        object: `urn:ngsi-ld:Toll:${toll.id}`
         }
     };
+    // console.log("TRANSACTION ENTITY:", transactionEntity);
+    return transactionEntity;
   }       
   
   
@@ -754,33 +762,39 @@ function userToFiwareEntity(user) {
   async function sendToFiware(entity) {
     try {
         // Check if entity already exists
-        const checkResponse = await axios.get(`http://localhost:1026/v2/entities/${entity.id}`, {
-            headers: {
-                'fiware-Service': 'openiot',
-                'Fiware-ServicePath': '/'
-            }
+        console.log("ENTITY ID: ",entity.id);
+        const checkResponse = await axios.get(`http://localhost:1026/v2/entities/`, {
+            // headers: {
+            //     'Fiware-Service': 'openiot',
+            //     'Fiware-ServicePath': '/'
+            // }
         });
   
-        if (checkResponse.stauts === 200) {
-            const updateResponse = await axios.patch(`http://localhost:1026/v2/entities/${entity.id}/attrs`, entity, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Fiware-Service': 'openiot',
-                    'Fiware-ServicePath': '/'
-                }
+        if (checkResponse.status === 200) {
+          console.log("CheckResponse is OK");
+            const {id,type, ...attrs} = entity;
+            console.log(attrs);
+            const updateResponse = await axios.patch(`http://localhost:1026/v2/entities/${entity.id}/attrs`, attrs, {
+                // headers: {
+                //     'Content-Type': 'application/json',
+                //     'Fiware-Service': 'openiot',
+                //     'Fiware-ServicePath': '/'
+                // }
             });
-            console.log('Entity updated successfully:', udpateResponse.data);
+            console.log('Entity updated successfully:', updateResponse.data);
         }
     } catch (error) {
         // If the entity does not exist, create it
-        if (error.response && error.reponse.status === 404) {
+        console.log("ERROR FROM CHECK RESPONSE");
+        if (error.response && error.response.status === 404) {
             try {
+                console.log("CREATED ENTITY: ",entity);
                 const createResponse = await axios.post('http://localhost:1026/v2/entities', entity, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Fiware-Service': 'openiot',
-                        'Fiware-ServicePath': '/'
-                    }
+                    // headers: {
+                    //     'Content-Type': 'application/json',
+                    //     'Fiware-Service': 'openiot',
+                    //     'Fiware-ServicePath': '/'
+                    // }
                 });
                 console.log('Entity created sucessfully:', createResponse.data);
             } catch (createError) {
@@ -788,6 +802,8 @@ function userToFiwareEntity(user) {
             }
         } else {
             console.error('Error checking entity existence:', error.response ? error.response.data : error.message);
+            console.error('Error checking entity existence:', error.response.status);
+
         }
     }
   }

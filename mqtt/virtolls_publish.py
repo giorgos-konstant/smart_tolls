@@ -37,7 +37,7 @@ def publish(client,fail):
             random_hour = random.randint(1,23)
             now = now.replace(hour=random_hour)
             json_msg = {
-                "deviceId" : "342",
+                "deviceId" : "45",
                 "timestamp" : now.isoformat()
             }
             if fail:
