@@ -31,18 +31,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to check for admin rights
-const adminCheckMiddleware = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    res.status(403).json({
-      success: false,
-      message: 'Access denied. Admins only.'
-    });
-  }
-};
-
 // Middleware to check authentication
 const authMiddleware = (roles = []) => {
   return (req, res, next) => {
@@ -85,7 +73,6 @@ db.once('open', () => {
 // Transaction Schema
 
 // User Schema
-// role added to user schema (29/08)
 const userSchema = new mongoose.Schema({
   username: String, 
   password: String,
@@ -152,12 +139,14 @@ const transactionSchema = new mongoose.Schema({
     chargeAmount: Number,
 });
 
-// Crreate Database Models
+// Create Database Models
 const DeviceModel = mongoose.model('Device', deviceSchema);
 const UserModel = mongoose.model('User', userSchema);
 const ChargingPolicyModel = mongoose.model('ChargingPolicy', chargingPolicySchema)
 const TollModel = mongoose.model('Toll', tollSchema);
 const TransactionModel = mongoose.model('Transaction', transactionSchema);
+
+// --------------- SAMPLE DATA INSERTION ---------------
 
 // SAMPLE : Charging Policy Values
 const sampleChargingPolicies = [
@@ -180,7 +169,7 @@ const sampleChargingPolicies = [
     ],
   },
 ];
-
+ 
 // Function to add SAMPLE data for transactions into database
 const insertTransactions = async () => {
    try {
@@ -315,21 +304,6 @@ insertTolls();
 // history
 // add-money
 
-// MAIN page load
-app.get('/', (req, res) => {
-  //res.sendFile(__dirname + '/index.html');
-  // main intro page to be loaded...
-});
-
-// LOGIN page load
-app.get('/login', (req, res) => {
-  //res.sendFile(__dirname + '/public/login.html');
-  // login page to be loaded
-});
-
-
-// ***************
-
 
 // Handle login page received values
 app.post('/login', async (req, res) => {
@@ -356,12 +330,6 @@ app.post('/login', async (req, res) => {
     console.error('Error during login:', error);
     res.status(500).send('Error during login. Please try again.');
   }
-});
-
-// SIGN-UP page load
-app.get('/signup', async (req, res) => {
-  //res.sendFile(__dirname + '/public/signup.html');
-  // SIGN-UP page to be loaded
 });
 
 
@@ -496,13 +464,7 @@ app.post('/add-money', authMiddleware(['user']), async(req, res) => {
     //console.log(user);
     if (user) {
       user.balance += amountToAdd;
-      //console.log("User balance:",user.balance);
-      //console.log(user);
       const updatedBalance = user.balance;
-      //console.log("Updated balance:",updatedBalance);
-      // JSON of user data with updated balance
-      //console.log('userWithDevice:', user);
-      //res.json({balance: updatedBalance});
       console.log("before save");
       console.log(user);
       await user.save();
@@ -523,7 +485,6 @@ app.post('/add-money', authMiddleware(['user']), async(req, res) => {
 });
 
 // ADMIN LOGIN
-// TO-DO : Proper authorization
 app.post('/admin', async (req, res) => {
   const {username, password} = req.body;
   try {
@@ -635,9 +596,8 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
       if (!user) {
         console.log('User not found');
       }
-      // SHOULD FIND TOLL BY TOLL_NAME
-      // Find the toll by toll_id
-      //const toll = await TollModel.findById(toll_id).exec();
+      
+      // Find toll of transaction
       const toll = await TollModel.findOne({region: tollName}).exec();
       console.log("FOUND TOLL:",toll)
       if(!toll) {
@@ -668,10 +628,23 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
           chargeAmount,
       });
 
+      // New Transaction data sent to FIWARE
+      const transactionEntity = transactionToFiwareEntity(transaction);
+      await sendToFiware(transactionEntity);
+
+      // Update User and Toll in FIWARE
+      const userEntity = userToFiwareEntity(user);
+      await sendToFiware(userEntity);
+
+      const tollEntity = tollToFiwareEntity(toll);
+      await sendToFiware(tollEntity);
+
+      // Save data of new transaction in MongoDB
       const savedTransaction = await newTransaction.save();
       user.transactions.push(savedTransaction._id);
       user.balance -= chargeAmount;
       await user.save();
+
       // Prepare data for MQTT publishing
       const mqttData = {
           userId: user._id,
@@ -692,6 +665,133 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
       console.error('Error processing toll payment:', error);
     }
 });
+
+// Handle notifications from FIWARE
+app.post('/notifications', async (req, res) => {
+    const notificationData = req.body;
+    console.log('Received notification:', notificationData);
+    res.status(204).send();
+});
+
+// Convert Toll to FIWARE Entity
+function tollToFiwareEntity(toll) {
+    return {
+        id: `urn:ngsi-ld:Toll:${toll._id}`,
+        type: "Toll",
+        region: {
+            type: "Property",
+            value: toll.region
+        },
+        zone: {
+            type: "Property",
+            value: toll.zone
+        }
+    };
+}
+
+
+// Convert User to FIWARE Entity
+function userToFiwareEntity(user) {
+    return {
+        id: `urn:ngsi-ld:Toll:${user._id}`,
+        type: "User",
+        username: {
+            type: "Property", 
+            value: user.username
+        },
+        email: {
+            type: "Property",
+            value: user.email
+        },
+        licensePlate: {
+            type: "Property",
+            value: user.licensePlate
+        },
+        balance: {
+            type: "Property",
+            value: user.balance
+        }, 
+        role: {
+            type: "Property",
+            value: user.role
+        },
+        deviceId: {
+            type: "Property",
+            value: user.device ? user.device.deviceId: null
+        },
+        transactions: {
+            type: "Relationship",
+            object: user.transactions.map(txId => `urn:ngsi-ld:tRANSACTION:${txId}`)
+        }
+    };
+  }
+  
+  // Convert Transaction to FIWARE Entity
+  function transactionToFiwareEntity(transaction) {
+    return {
+    id: `urn:ngsi-ld:Transaction:${transactionDocument._id}`,
+    type: "Transaction",
+    amount: {
+        type: "Property",
+        value: transactionDocument.amount
+    },
+    timestamp: {
+        type: "Property",
+        value: transactionDocument.timestamp },
+    user: {
+        type: "Relationship",
+        object: `urn:ngsi-ld:User:${transaction.user._id}`
+    },
+    toll: {
+        type: "Relationship",
+        object: `urn:ngsi-ld:Toll:${transaction.toll._id}`
+        }
+    };
+  }       
+  
+  
+  // Send to Orion Context Broker
+  async function sendToFiware(entity) {
+    try {
+        // Check if entity already exists
+        const checkResponse = await axios.get(`http://localhost:1026/v2/entities/${entity.id}`, {
+            headers: {
+                'fiware-Service': 'openiot',
+                'Fiware-ServicePath': '/'
+            }
+        });
+  
+        if (checkResponse.stauts === 200) {
+            const updateResponse = await axios.patch(`http://localhost:1026/v2/entities/${entity.id}/attrs`, entity, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Fiware-Service': 'openiot',
+                    'Fiware-ServicePath': '/'
+                }
+            });
+            console.log('Entity updated successfully:', udpateResponse.data);
+        }
+    } catch (error) {
+        // If the entity does not exist, create it
+        if (error.response && error.reponse.status === 404) {
+            try {
+                const createResponse = await axios.post('http://localhost:1026/v2/entities', entity, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Fiware-Service': 'openiot',
+                        'Fiware-ServicePath': '/'
+                    }
+                });
+                console.log('Entity created sucessfully:', createResponse.data);
+            } catch (createError) {
+                console.error('Error creating entity:', createError.response ? createError.response.data: error.message);
+            }
+        } else {
+            console.error('Error checking entity existence:', error.response ? error.response.data : error.message);
+        }
+    }
+  }
+  
 
 // Caclulate charge amount based on time and zone
 function extractTimezone(timestamp) {
