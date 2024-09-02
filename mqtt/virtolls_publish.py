@@ -30,9 +30,10 @@ def publish(client,fail):
     
     i=0
     try:
-        while i<1:
+        while i<2:
             time.sleep(random.randint(1,3))
-            topic = random.choice(topics)
+            # topic = random.choice(topics)
+            topic = 'tolls/Tei'
             now = datetime.now()
             random_hour = random.randint(1,23)
             now = now.replace(hour=random_hour)

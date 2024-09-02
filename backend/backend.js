@@ -723,10 +723,6 @@ function userToFiwareEntity(user,device) {
             type: "Property",
             value: device ? device.deviceId: null
         },
-        // transactions: {
-        //     type: "Relationship",
-        //     object: user.transactions.map(txId => `urn:ngsi-ld:Transaction:${txId}`)
-        // }
     };
     // console.log('USER ENTITY: ',userEntity);
     return userEntity;
@@ -744,13 +740,13 @@ function userToFiwareEntity(user,device) {
     timestamp: {
         type: "Property",
         value: transaction.timeStamp },
-    user: {
+    refUser: {
         type: "Relationship",
-        object: `urn:ngsi-ld:User:${user.id}`
+        value: `${user.id}`
     },
-    toll: {
+    refToll: {
         type: "Relationship",
-        object: `urn:ngsi-ld:Toll:${toll.id}`
+        value: `${toll.id}`
         }
     };
     // console.log("TRANSACTION ENTITY:", transactionEntity);
