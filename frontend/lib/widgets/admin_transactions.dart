@@ -51,7 +51,7 @@ class TransactionBox extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           Text(
-            'Zone: ${transaction.zone[transaction.zone.length - 1]}, Station: ${transaction.tollName}, Charge: ${transaction.chargeAmount}',
+            'Toll Entity: ${transaction.tollId}, Charge: ${transaction.chargeAmount}',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),

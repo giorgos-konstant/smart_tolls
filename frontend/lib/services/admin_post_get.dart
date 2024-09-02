@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import '../services/auth.dart';
 import '../models/models.dart';
 
-Future<bool?> loginAdmin(AdminAuthProvider auth, username, String password) async {
+Future<bool?> loginAdmin(
+    AdminAuthProvider auth, username, String password) async {
   final url = Uri.parse('http://localhost:5000/admin/');
 
   try {
@@ -36,7 +37,9 @@ Future getTotalTransactions(AdminAuthProvider auth) async {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      List<AdminTransaction> transactions = data
+      List<dynamic> filteredData =
+          data.where((map) => map.length == 6).toList();
+      List<AdminTransaction> transactions = filteredData
           .map<AdminTransaction>((item) => AdminTransaction.fromJson(item))
           .toList();
       AdminUser updatedAdmin = AdminUser(transactions: transactions);
@@ -60,7 +63,10 @@ Future getTotalStatsPerToll(String tollName, AdminAuthProvider auth) async {
     };
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json','authorization' : 'Bearer ${auth.sessionToken}'},
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ${auth.sessionToken}'
+      },
       body: jsonEncode(reqBody),
     );
 

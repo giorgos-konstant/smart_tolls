@@ -40,7 +40,7 @@ mqttBrokerSetUp(AuthProvider auth, String clientName) async {
       final message = messages[0].payload as MqttPublishMessage;
       final decoded =
           MqttPublishPayload.bytesToStringAsString(message.payload.message);
-      print("!!!!Received message $decoded from topic: $topic");
+      print("Received message $decoded from topic: $topic");
       final Map<String, dynamic> data = jsonDecode(decoded);
       double updatedBalance = data['balance'] as double;
       String userId = data['transaction']['id'] as String;
@@ -66,8 +66,10 @@ mqttBrokerSetUp(AuthProvider auth, String clientName) async {
           transactions: auth.user!.transactions);
 
       toastification.show(
-          title: Text('Successfull Transaction',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
-          description: Text("Station: $tollName",style: TextStyle(fontSize: 15,fontWeight:FontWeight.bold)),
+          title: Text('Successfull Transaction',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          description: Text("Station: $tollName",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           alignment: Alignment.topCenter,
           autoCloseDuration: Duration(seconds: 3),
           type: ToastificationType.success,

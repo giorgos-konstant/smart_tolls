@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
 // Hash passwords
 userSchema. pre('save', async function(next) {
   if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, saltRounds);
+    this.password = bcrypt.hash(this.password, saltRounds);
   }
   next();
 });
@@ -311,8 +311,7 @@ app.post('/login', async (req, res) => {
   const {username, password} = req.body;
 
   try {
-    const user = await UserModel.findOne({username, password});
-    console.log(username,password,user.password)
+    const user = await UserModel.findOne({username});
     if (user && bcrypt.compare(password,user.password)) {
       //Generate token
       const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY, {expiresIn: '1h'});
@@ -466,16 +465,11 @@ app.post('/add-money', authMiddleware(['user']), async(req, res) => {
     if (user) {
       user.balance += amountToAdd;
       const updatedBalance = user.balance;
-      console.log("before save");
-      console.log(user);
+      
       await user.save();
-      console.log("after save");
-      console.log(user);
-      // JSON of user data with updated balance
-      console.log('userWithDevice:', user);
+      
       res.json({balance: updatedBalance});
-      // load updated user info on DASHBOARD
-      // res.render('dashboard', {user: userWithDevice});
+      
     } else {
       res.status(404).send('User not found');
     }
@@ -585,7 +579,7 @@ app.get('/admin-policy', authMiddleware(['admin']), async(req, res) => {
 
 messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
   try {
-      console.log(tollName,deviceId,timestamp)
+      console.log(tollName,deviceId,timestamp);
       // Find the device by device_id
       const device = await DeviceModel.findOne({deviceId: deviceId}).exec();
       if (!device) {
@@ -670,12 +664,13 @@ messageEmitter.on('tollMessage', async ({tollName, deviceId, timestamp})=> {
     }
 });
 
-// Handle notifications from FIWARE
-app.post('/notifications', async (req, res) => {
-    const notificationData = req.body;
-    console.log('Received notification:', notificationData);
-    res.status(204).send();
-});
+// // Handle notifications from FIWARE
+// app.post('/notifications', async (req, res) => {
+//     console.log("GOT MESSAGE FROM SUBSCRIPTION:",request);
+//     const notificationData = req.body;
+//     console.log('Received notification:', notificationData);
+//     res.status(204).send();
+// });
 
 // Convert Toll to FIWARE Entity
 function tollToFiwareEntity(toll) {
@@ -758,48 +753,24 @@ function userToFiwareEntity(user,device) {
   async function sendToFiware(entity) {
     try {
         // Check if entity already exists
-        console.log("ENTITY ID: ",entity.id);
-        const checkResponse = await axios.get(`http://localhost:1026/v2/entities/`, {
-            // headers: {
-            //     'Fiware-Service': 'openiot',
-            //     'Fiware-ServicePath': '/'
-            // }
-        });
+        const checkResponse = await axios.get(`http://localhost:1026/v2/entities/`);
   
         if (checkResponse.status === 200) {
-          console.log("CheckResponse is OK");
             const {id,type, ...attrs} = entity;
-            console.log(attrs);
-            const updateResponse = await axios.patch(`http://localhost:1026/v2/entities/${entity.id}/attrs`, attrs, {
-                // headers: {
-                //     'Content-Type': 'application/json',
-                //     'Fiware-Service': 'openiot',
-                //     'Fiware-ServicePath': '/'
-                // }
-            });
+            const updateResponse = await axios.patch(`http://localhost:1026/v2/entities/${entity.id}/attrs`, attrs);
             console.log('Entity updated successfully:', updateResponse.data);
         }
     } catch (error) {
         // If the entity does not exist, create it
-        console.log("ERROR FROM CHECK RESPONSE");
         if (error.response && error.response.status === 404) {
             try {
-                console.log("CREATED ENTITY: ",entity);
-                const createResponse = await axios.post('http://localhost:1026/v2/entities', entity, {
-                    // headers: {
-                    //     'Content-Type': 'application/json',
-                    //     'Fiware-Service': 'openiot',
-                    //     'Fiware-ServicePath': '/'
-                    // }
-                });
+                const createResponse = await axios.post('http://localhost:1026/v2/entities', entity);
                 console.log('Entity created sucessfully:', createResponse.data);
             } catch (createError) {
                 console.error('Error creating entity:', createError.response ? createError.response.data: error.message);
             }
         } else {
             console.error('Error checking entity existence:', error.response ? error.response.data : error.message);
-            console.error('Error checking entity existence:', error.response.status);
-
         }
     }
   }

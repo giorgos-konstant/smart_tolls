@@ -12,8 +12,8 @@ class AdminAuthProvider extends ChangeNotifier {
   String _loginFailMsg = '';
   String get loginFailMsg => _loginFailMsg;
 
-  TotalStatsPerToll _total =
-      TotalStatsPerToll(totalTransactions: 0, totalMoney: 0.0, currentPrice: 0.0);
+  TotalStatsPerToll _total = TotalStatsPerToll(
+      totalTransactions: 0, totalMoney: 0.0, currentPrice: 0.0);
   TotalStatsPerToll get total => _total;
 
   CurrentPolicy _currentPolicy = CurrentPolicy(regionCurrentPolicies: []);
@@ -23,7 +23,7 @@ class AdminAuthProvider extends ChangeNotifier {
   String _sessionToken = '';
   String get sessionToken => _sessionToken;
 
-  void setSessionToken(String jwt){
+  void setSessionToken(String jwt) {
     _sessionToken = jwt;
     notifyListeners();
   }
@@ -75,7 +75,7 @@ class AuthProvider extends ChangeNotifier {
   String _sessionToken = '';
   String get sessionToken => _sessionToken;
 
-  void setSessionToken(String jwt){
+  void setSessionToken(String jwt) {
     _sessionToken = jwt;
     notifyListeners();
   }

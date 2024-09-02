@@ -6,7 +6,7 @@ import json
 
 broker = "localhost"
 port = 1883
-tolls = ['Tei','Konpoleos','Germanou','OthAma']
+tolls = ['Tei','Konpoleos','Germanou','OthAma','Akti Dymaion','AgAndreou','Perivola']
 topics = [f'tolls/{toll}' for toll in tolls]
 print(topics)
 mqtt_client.connected_flag = False
@@ -32,13 +32,14 @@ def publish(client,fail):
     try:
         while i<2:
             time.sleep(random.randint(1,3))
-            # topic = random.choice(topics)
-            topic = 'tolls/Tei'
+            topic = random.choice(topics)
             now = datetime.now()
             random_hour = random.randint(1,23)
             now = now.replace(hour=random_hour)
+            # device = random.choice(['4566','45','593'])
             json_msg = {
-                "deviceId" : "45",
+                # "deviceId" : device,
+                "deviceId" : "4566",
                 "timestamp" : now.isoformat()
             }
             if fail:

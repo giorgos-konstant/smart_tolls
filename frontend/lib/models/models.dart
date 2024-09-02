@@ -130,27 +130,24 @@ class Transaction {
 class AdminTransaction {
   final String objId;
   final String userId;
-  final String zone;
-  final String tollName;
+  final String tollId;
   final String timeStamp;
   final double chargeAmount;
 
   AdminTransaction({
     required this.objId,
     required this.userId,
-    required this.zone,
-    required this.tollName,
+    required this.tollId,
     required this.timeStamp,
     required this.chargeAmount,
   });
 
   AdminTransaction.fromJson(Map<String, dynamic> json)
-      : objId = json['_id'] as String,
-        userId = json['userId'] as String,
-        zone = json['zone'] as String,
-        tollName = json['tollName'] as String,
-        timeStamp = json['timeStamp'] as String,
-        chargeAmount = json['chargeAmount'].toDouble() as double;
+      : objId = json['id'] as String,
+        userId = json['refUser']['value'] as String,
+        tollId = json['refToll']['value'] as String,
+        timeStamp = json['timestamp']['value'] as String,
+        chargeAmount = json['amount']['value'].toDouble() as double;
 }
 
 class TotalStatsPerToll {
@@ -158,11 +155,10 @@ class TotalStatsPerToll {
   final double totalMoney;
   final double currentPrice;
 
-  TotalStatsPerToll({
-    required this.totalTransactions,
-    required this.totalMoney,
-    required this.currentPrice
-  });
+  TotalStatsPerToll(
+      {required this.totalTransactions,
+      required this.totalMoney,
+      required this.currentPrice});
 
   TotalStatsPerToll.fromJson(Map<String, dynamic> json)
       : totalTransactions = json['totalTransactions'] as int,
@@ -183,20 +179,15 @@ class CurrentPolicy {
 }
 
 class CurrentRegionPolicy {
-
   final String tollName;
   final String zone;
   final double currentPrice;
 
-  CurrentRegionPolicy({
-    required this.tollName,
-    required this.zone,
-    required this.currentPrice
-  });
+  CurrentRegionPolicy(
+      {required this.tollName, required this.zone, required this.currentPrice});
 
-  CurrentRegionPolicy.fromJson(Map<String,dynamic> json) 
-    : tollName = json['tollName'] as String,
-    zone = json['zone'] as String,
-    currentPrice = json['currentPrice'].toDouble() as double;
-  
+  CurrentRegionPolicy.fromJson(Map<String, dynamic> json)
+      : tollName = json['tollName'] as String,
+        zone = json['zone'] as String,
+        currentPrice = json['currentPrice'].toDouble() as double;
 }

@@ -10,7 +10,7 @@ from nfc_read import nfc_read
 
 broker = "localhost"
 port = 1883
-topic = "tolls/TEI"
+topic = "tolls/Rio"
 mqtt_client.connected_flag = False
 client_id = f'publish-{random.randint(0, 1000)}'
 
@@ -33,7 +33,7 @@ def publish(client):
         time.sleep(1)
         while True:
             if not nfc_read():
-                print("nothing happening right now")
+                print("Not Reading NFC")
                 time.sleep(1)
             else:
                 now = datetime.now()
