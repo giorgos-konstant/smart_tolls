@@ -9,7 +9,7 @@ def nfc_read() -> bool:
         try:
             try:
                 reader.connect()
-                print("NFC TAG TOUCHED ME")
+                print("NFC TAG DETECTED")
                 time.sleep(2)
                 return True
             except (error.NoCommunication) as e :
@@ -21,4 +21,5 @@ def nfc_read() -> bool:
 
 if __name__ == "__main__":
     nfc_read()
+    
     
